@@ -1,5 +1,7 @@
-// app/(dashboard)/layout.tsx
-import {Header} from "@/components/header"
+"use client"; // Ajoutez cette ligne en haut
+
+import { Header } from "@/components/header"
+
 type Props = {
     children: React.ReactNode;
 }

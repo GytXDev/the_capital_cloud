@@ -20,7 +20,7 @@ const IconCapitalCloud = (props: React.SVGProps<SVGSVGElement>) => {
             fillRule: 'nonzero',
             opacity: 1,
           }}
-          xlinkHref="/logo.svg" 
+          xlinkHref="/logo.svg" // Utilisation de l'URL relative vers votre fichier SVG
           x="-250"
           y="-250"
           width="500"

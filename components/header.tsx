@@ -1,3 +1,5 @@
+"use client"; // Ajoutez cette ligne en haut
+
 import { Loader2 } from "lucide-react";
 import  HeaderLogo  from "./header-logo"
 import { Navigation } from "./navigation"
