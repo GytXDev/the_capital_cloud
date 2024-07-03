@@ -1,45 +1,18 @@
-import Link from 'next/link'
-import { Text, Box, useColorModeValue } from '@chakra-ui/react'
-import IconCapitalCloud from './icons/icon'
-import styled from '@emotion/styled'
-
-const LogoBox = styled.span`
-  font-weight: bold;
-  font-size: 18px;
-  display: inline-flex;
-  align-items: center;
-  height: 30px;
-  line-height: 20px;
-  padding: 10px;
-
-  > svg {
-    transition: 200ms ease;
-  }
-
-  &:hover > svg {
-    transform: rotate(20deg);
-  }
-`
+import Link from "next/link"
+import Image from "next/image"
 
 const HeaderLogo = () => {
     return (
-        <Link href="/" scroll={false}>
-            <LogoBox>
-                <IconCapitalCloud />
-                <Text
-                    color={useColorModeValue('gray.800', 'whiteAlpha.900')}
-                    fontFamily='"M PLUS Rounded 1c", sans-serif'
-                    fontWeight="bold"
-                    ml={3}
-                >
+        <Link href="/">
+            <div className="items-center hidden lg:flex">
+                <Image src="/logo.svg" alt="logo" height={35} width={35} />
+                <p className="font-semibold text-white text-xl ml-2.5">
                     TheCapitalCloud{' '}
-                    <Box as="span" fontWeight="normal" fontSize="sm">
-                        v1.0.1
-                    </Box> 
-                </Text>
-            </LogoBox>
+                    <span className="font-normal text-sm">v1.0.1</span>
+                </p>
+            </div>
         </Link>
-    )
-}
+    );
+};
 
-export default HeaderLogo
+export default HeaderLogo;

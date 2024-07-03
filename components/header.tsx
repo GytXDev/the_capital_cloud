@@ -1,7 +1,7 @@
-"use client"; // Ajoutez cette ligne en haut
+"use client"; 
 
 import { Loader2 } from "lucide-react";
-import  HeaderLogo  from "./header-logo"
+import HeaderLogo from "./header-logo"
 import { Navigation } from "./navigation"
 import { UserButton, ClerkLoading, ClerkLoaded } from "@clerk/nextjs";
 import { WelcomeMsg } from "./welcome-msg";
@@ -19,7 +19,7 @@ export const Header = () => {
                         <UserButton afterSignOutUrl="/" />
                     </ClerkLoaded>
                     <ClerkLoading>
-                        <Loader2 className="size-8 animate-spin text-slate-400"/>
+                        <Loader2 className="size-8 animate-spin text-slate-400" />
                     </ClerkLoading>
                 </div>
                 <WelcomeMsg />

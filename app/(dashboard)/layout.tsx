@@ -1,5 +1,4 @@
-"use client"; // Ajoutez cette ligne en haut
-
+"use client"; 
 import { Header } from "@/components/header"
 
 type Props = {

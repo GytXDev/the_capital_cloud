@@ -8,6 +8,13 @@
       "when": 1719687259112,
       "tag": "0000_unique_sabretooth",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1719848125709,
+      "tag": "0001_daffy_madrox",
+      "breakpoints": true
     }
   ]
 }
