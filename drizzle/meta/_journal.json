@@ -15,6 +15,13 @@
       "when": 1719848125709,
       "tag": "0001_daffy_madrox",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1720123085014,
+      "tag": "0002_wise_stryfe",
+      "breakpoints": true
     }
   ]
 }
