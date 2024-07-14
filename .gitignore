@@ -5,7 +5,6 @@
 .yarn
 .yarnrc
 .yarnrc.yml
-package-lock.json
 
 # Testing
 /coverage
