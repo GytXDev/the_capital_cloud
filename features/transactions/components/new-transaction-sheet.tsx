@@ -4,7 +4,7 @@ import { z } from "zod";
 import { useNewTransaction } from "../hooks/use-new-transaction";
 import { useCreateCategory } from "@/features/categories/api/use-create-category";
 import { insertTransactionSchema } from "@/db/schema";
-import { useCreateTransaction } from "../api/use-create-accounts";
+import { useCreateTransaction } from "../api/use-create-transactions";
 
 import {
     Sheet,

@@ -22,13 +22,13 @@ export const useCreateCategory = () => {
             return await response.json();
         },
         onSuccess: () => {
-            toast.success("Category created")
+            toast.success("Categories created")
             queryClient.invalidateQueries({ queryKey: ["categories"] });
-            
-            
+            queryClient.invalidateQueries({ queryKey: ["summary"] });
+
         },
-        onError: () =>{
-            toast.error("Failded to create category");
+        onError: () => {
+            toast.error("Failded to create categories");
         }
     })
 
