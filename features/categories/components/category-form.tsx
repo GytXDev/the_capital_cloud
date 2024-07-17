@@ -33,8 +33,9 @@ const messages = {
     }
 };
 
-// Détecter la langue du navigateur et assurer que c'est une des clés de messages
-const browserLanguage = (navigator.language.split('-')[0] as keyof typeof messages);
+const browserLanguage = typeof navigator !== "undefined"
+    ? (navigator.language.split('-')[0] as keyof typeof messages)
+    : 'en';
 
 // Sélectionner les messages en fonction de la langue détectée
 const selectedMessages = messages[browserLanguage] || messages.en;

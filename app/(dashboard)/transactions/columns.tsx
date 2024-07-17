@@ -34,8 +34,12 @@ const translations = {
   },
 };
 
-const browserLanguage = (navigator.language.split('-')[0] as keyof typeof translations) || 'en';
+const browserLanguage = typeof navigator !== "undefined" 
+  ? (navigator.language.split('-')[0] as keyof typeof translations) 
+  : 'en';
+
 const selectedTranslations = translations[browserLanguage];
+
 
 export const columns: ColumnDef<ResponseType>[] = [
   {

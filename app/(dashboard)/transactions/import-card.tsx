@@ -35,9 +35,12 @@ const translations = {
     },
 };
 
-const browserLanguage = (navigator.language.split('-')[0] as keyof typeof translations) || 'en';
+const browserLanguage = typeof navigator !== "undefined"
+    ? (navigator.language.split('-')[0] as keyof typeof translations)
+    : 'en';
 
 const selectedTranslations = translations[browserLanguage];
+
 
 const parseDate = (dateString: string) => {
     let parsedDate = parse(dateString, dateFormat1, new Date());

@@ -119,7 +119,9 @@ export const TransactionForm = ({
     };
 
     // Définir la langue actuelle
-    const currentLanguage = navigator.language.split('-')[0] as 'en' | 'fr';
+    const currentLanguage = typeof navigator !== "undefined"
+        ? (navigator.language.split('-')[0] as 'en' | 'fr')
+        : 'en';
 
     return (
         <Form {...form}>

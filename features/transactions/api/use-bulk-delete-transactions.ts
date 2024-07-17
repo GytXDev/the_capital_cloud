@@ -7,8 +7,8 @@ import { client } from "@/lib/hono";
 // Définir les langues supportées
 type SupportedLanguages = 'en' | 'fr';
 
-// Détecter la langue du navigateur
-const browserLanguage: SupportedLanguages = navigator.language.split('-')[0] as SupportedLanguages;
+// Détecter la langue du navigateur (conditionné côté client)
+const browserLanguage: SupportedLanguages = typeof navigator !== 'undefined' ? navigator.language.split('-')[0] as SupportedLanguages : 'en';
 
 // Définir les messages traduits
 const messages: Record<SupportedLanguages, { success: string; error: string }> = {
@@ -37,7 +37,7 @@ export const useBulkDeleteTransactions = () => {
         RequestType
     >({
         mutationFn: async (json) => {
-            const response = await client.api.transactions["bulk-delete"]["$post"]({json});
+            const response = await client.api.transactions["bulk-delete"]["$post"]({ json });
             return await response.json();
         },
         onSuccess: () => {

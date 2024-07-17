@@ -48,7 +48,9 @@ const messages = {
 
 export const EditTransactionSheet = () => {
     // Utilisation d'une constante pour définir la langue actuelle
-    const currentLanguage = navigator.language.split('-')[0] as 'en' | 'fr';
+    const currentLanguage = typeof navigator !== "undefined"
+        ? (navigator.language.split('-')[0] as 'en' | 'fr')
+        : 'en';
 
     const { isOpen, onClose, id } = useOpenTransaction();
     const [ConfirmDialog, confirm] = useConfirm(

@@ -21,11 +21,12 @@ const translations = {
     },
 };
 
-// Détecter la langue du navigateur et s'assurer que c'est une des clés de messages
-const browserLanguage = (navigator.language.split('-')[0] as keyof typeof translations) || 'en';
+const browserLanguage = typeof navigator !== "undefined"
+    ? (navigator.language.split('-')[0] as keyof typeof translations)
+    : 'en';
 
-// Sélectionner les messages en fonction de la langue détectée
 const selectedTranslations = translations[browserLanguage];
+
 
 export const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
     if (!active || !payload || !payload.length) return null;

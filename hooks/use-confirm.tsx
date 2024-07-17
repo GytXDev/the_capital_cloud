@@ -26,7 +26,9 @@ export const useConfirm = (
     title: string,
     message: string,
 ): [() => JSX.Element, () => Promise<unknown>] => {
-    const currentLanguage = navigator.language.split('-')[0] as 'en' | 'fr';
+    const currentLanguage = typeof navigator !== "undefined"
+        ? (navigator.language.split('-')[0] as 'en' | 'fr')
+        : 'en';
 
     const [promise, setPromise] = useState<{
         resolve: (value: boolean) => void

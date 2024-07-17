@@ -1,18 +1,22 @@
 // components/header.tsx
-"use client";
-
 import dynamic from 'next/dynamic';
-
-// Importez votre composant WelcomeMsg avec dynamic
-const WelcomeMsg = dynamic(() => import('./welcome-msg').then(mod => mod.WelcomeMsg), { ssr: false });
-const Filters = dynamic(() => import('./filters').then(mod => mod.Filters), { ssr: false });
-
+import { useEffect, useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import HeaderLogo from './header-logo';
 import { Navigation } from './navigation';
-import { UserButton, ClerkLoading, ClerkLoaded } from '@clerk/nextjs';
+import { UserButton, ClerkLoaded, ClerkLoading } from '@clerk/nextjs';
+
+// Import dynamique des composants WelcomeMsg et Filters
+const WelcomeMsg = dynamic(() => import('./welcome-msg').then(mod => mod.WelcomeMsg), { ssr: false });
+const Filters = dynamic(() => import('./filters').then(mod => mod.Filters), { ssr: false });
 
 export const Header = () => {
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        setIsMounted(true); // Indique que le composant est monté côté client
+    }, []);
+
     return (
         <header className="bg-gradient-to-b from-blue-700 to-blue-500 px-4 py-8 lg:px-14 pb-36">
             <div className="max-w-screen-2xl mx-auto">
@@ -21,15 +25,19 @@ export const Header = () => {
                         <HeaderLogo />
                         <Navigation />
                     </div>
-                    <ClerkLoaded>
-                        <UserButton afterSignOutUrl="/" />
-                    </ClerkLoaded>
-                    <ClerkLoading>
-                        <Loader2 className="size-8 animate-spin text-slate-400" />
-                    </ClerkLoading>
+                    {isMounted && (
+                        <ClerkLoaded>
+                            <UserButton afterSignOutUrl="/" />
+                        </ClerkLoaded>
+                    )}
+                    {isMounted && (
+                        <ClerkLoading>
+                            <Loader2 className="size-8 animate-spin text-slate-400" />
+                        </ClerkLoading>
+                    )}
                 </div>
-                <WelcomeMsg /> {/* Utilisation de WelcomeMsg dynamique */}
-                <Filters /> {/* Utilisation de Filters dynamique */}
+                {isMounted && WelcomeMsg && <WelcomeMsg />}
+                {isMounted && Filters && <Filters />}
             </div>
         </header>
     );

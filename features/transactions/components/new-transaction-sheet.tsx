@@ -39,7 +39,10 @@ const formSchema = insertTransactionSchema.omit({
 type FormValues = z.input<typeof formSchema>;
 
 export const NewTransactionSheet = () => {
-    const currentLanguage = navigator.language.split('-')[0] as 'en' | 'fr';
+    const currentLanguage = typeof navigator !== "undefined"
+        ? (navigator.language.split('-')[0] as 'en' | 'fr')
+        : 'en';
+
     const { isOpen, onClose } = useNewTransaction();
 
     const createMutation = useCreateTransaction();
@@ -85,7 +88,7 @@ export const NewTransactionSheet = () => {
             <SheetContent className="space-y-4">
                 <SheetHeader>
                     <SheetTitle>
-                        {messages[currentLanguage]?.newTransactionTitle || messages.en.newTransactionTitle }
+                        {messages[currentLanguage]?.newTransactionTitle || messages.en.newTransactionTitle}
                     </SheetTitle>
                     <SheetDescription>
                         {messages[currentLanguage]?.newTransactionDescription || messages.en.newTransactionDescription}

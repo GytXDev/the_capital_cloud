@@ -1,10 +1,10 @@
 // components/navigation.tsx
 "use client";
-import { useState } from "react";
-import { useMedia } from "react-use"
+import { useState, useEffect } from "react";
+import { useMedia } from "react-use";
 import { usePathname, useRouter } from "next/navigation";
 import { NavButton } from "./nav-button";
-import { Menu } from "lucide-react"
+import { Menu } from "lucide-react";
 import {
     Sheet,
     SheetContent,
@@ -54,10 +54,17 @@ const routes = [
 
 export const Navigation = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [browserLanguage, setBrowserLanguage] = useState('en'); // Par défaut à 'en'
     const router = useRouter();
     const isMobile = useMedia("(max-width: 1024px)", false);
     const pathname = usePathname();
-    const browserLanguage = navigator.language.split('-')[0]; // Obtenir la langue principale du navigateur
+
+    useEffect(() => {
+        if (typeof navigator !== "undefined") {
+            const language = navigator.language.split('-')[0];
+            setBrowserLanguage(language);
+        }
+    }, []);
 
     const onClick = (href: string) => {
         router.push(href);
@@ -110,5 +117,6 @@ export const Navigation = () => {
                 />
             ))}
         </nav>
-    )
-}
+    );
+};
+

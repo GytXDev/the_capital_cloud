@@ -1,5 +1,5 @@
-// components/spending-pie.tsx 
-import { useState } from "react";
+// components/spending-pie.tsx
+import { useState, useEffect } from "react";
 import {
     Card,
     CardContent,
@@ -19,14 +19,12 @@ import { RadarVariant } from "./radar-variant";
 import { RadialVariant } from "./radial-variant";
 import { Skeleton } from "./ui/skeleton";
 
-
 type Props = {
     data?: {
         name: string;
         value: number;
     }[];
 };
-
 
 // Tableaux de traductions
 const translations = {
@@ -48,14 +46,20 @@ const translations = {
     },
 };
 
-// Détecter la langue du navigateur et s'assurer que c'est une des clés de messages
-const browserLanguage = (navigator.language.split('-')[0] as keyof typeof translations);
-
-// Sélectionner les messages en fonction de la langue détectée
-const selectedTranslations = translations[browserLanguage] || translations.en;
-
 export const SpendingPie = ({ data = [] }: Props) => {
     const [chartType, setChartType] = useState("pie");
+    const [browserLanguage, setBrowserLanguage] = useState<keyof typeof translations>('en');
+
+    useEffect(() => {
+        // Vérifier si nous sommes côté client avant d'accéder à navigator
+        if (typeof window !== 'undefined') {
+            const language = navigator.language.split('-')[0] as keyof typeof translations;
+            setBrowserLanguage(language);
+        }
+    }, []);
+
+    // Sélectionner les messages en fonction de la langue détectée
+    const selectedTranslations = translations[browserLanguage] || translations.en;
 
     const onTypeChange = (type: string) => {
         setChartType(type);
@@ -72,14 +76,14 @@ export const SpendingPie = ({ data = [] }: Props) => {
                     onValueChange={onTypeChange}
                 >
                     <SelectTrigger className="lg:w-auto h-9 rounded-md px-3">
-                        <SelectValue placeholder="Chart type" />
+                        <SelectValue placeholder={selectedTranslations.chartType} />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value="pie">
                             <div className="flex items-center">
                                 <PieChart className="size-4 mr-2 shrink-0" />
                                 <p className="line-clamp-1">
-                                {selectedTranslations.pieChart}
+                                    {selectedTranslations.pieChart}
                                 </p>
                             </div>
                         </SelectItem>
@@ -107,7 +111,7 @@ export const SpendingPie = ({ data = [] }: Props) => {
                     <div className="flex flex-col gap-y-4 items-center justify-center h-[350px} w-full">
                         <FileSearch className="size-6 text-muted-foreground" />
                         <p className="text-muted-foreground text-sm">
-                           {selectedTranslations.noData}
+                            {selectedTranslations.noData}
                         </p>
                     </div>
                 ) : (
