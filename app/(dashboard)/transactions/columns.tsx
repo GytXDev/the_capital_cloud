@@ -14,6 +14,29 @@ import { CategoryColumn } from "./category-column"
 
 export type ResponseType = InferResponseType<typeof client.api.transactions.$get, 200>["data"][0];
 
+
+const translations = {
+  fr: {
+    selectAll: "Sélectionner tout",
+    date: "Date",
+    category: "Catégorie",
+    payee: "Bénéficiaire",
+    amount: "Montant",
+    account: "Compte",
+  },
+  en: {
+    selectAll: "Select all",
+    date: "Date",
+    category: "Category",
+    payee: "Payee",
+    amount: "Amount",
+    account: "Account",
+  },
+};
+
+const browserLanguage = (navigator.language.split('-')[0] as keyof typeof translations) || 'en';
+const selectedTranslations = translations[browserLanguage];
+
 export const columns: ColumnDef<ResponseType>[] = [
   {
     id: "select",
@@ -44,7 +67,7 @@ export const columns: ColumnDef<ResponseType>[] = [
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Date
+        {selectedTranslations.date}
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
@@ -74,7 +97,7 @@ export const columns: ColumnDef<ResponseType>[] = [
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Category
+        {selectedTranslations.category}
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
@@ -95,7 +118,7 @@ export const columns: ColumnDef<ResponseType>[] = [
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Payee
+        {selectedTranslations.payee}
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
@@ -107,7 +130,7 @@ export const columns: ColumnDef<ResponseType>[] = [
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Amount
+        {selectedTranslations.amount}
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
@@ -131,7 +154,7 @@ export const columns: ColumnDef<ResponseType>[] = [
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Account
+        {selectedTranslations.account}
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),

@@ -17,6 +17,24 @@ import {
     SelectValue
 } from "@/components/ui/select";
 
+// Tableaux de traductions
+const translations = {
+    fr: {
+        allAccounts: "Tous les comptes",
+        accountPlaceholder: "Compte",
+    },
+    en: {
+        allAccounts: "All accounts",
+        accountPlaceholder: "Account",
+    },
+};
+
+// Détecter la langue du navigateur et s'assurer que c'est une des clés de messages
+const browserLanguage = (navigator.language.split('-')[0] as keyof typeof translations) || 'en';
+
+// Sélectionner les messages en fonction de la langue détectée
+const selectedTranslations = translations[browserLanguage];
+
 export const AccountFilter = () => {
     const router = useRouter();
     const pathname = usePathname();
@@ -56,11 +74,11 @@ export const AccountFilter = () => {
             <SelectTrigger
                 className="lg:w-auto w-full h-9 rounded-md px-3 font-normal bg-white/10 hover:bg-white/20 hover:text-white border-none focus:ring-offset-0 focus:ring-transparent outline-none text-white focus:bg-white/30 transition"
             >
-                <SelectValue placeholder="Account" />
+                <SelectValue placeholder={selectedTranslations.accountPlaceholder} />
             </SelectTrigger>
             <SelectContent>
                 <SelectItem value="all">
-                    All accounts
+                    {selectedTranslations.allAccounts}
                 </SelectItem>
                 {accounts?.map((account) => (
                     <SelectItem key={account.id} value={account.id}>

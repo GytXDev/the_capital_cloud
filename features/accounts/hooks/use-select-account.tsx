@@ -13,7 +13,29 @@ import { useGetAccounts } from "../api/use-get-accounts";
 import { useCreateAccount } from "../api/use-create-accounts";
 import { Select } from "@/components/select";
 
-export const useSelectAccount = (): [() => JSX.Element, () => Promise<unknown>] => {
+// Messages traduits pour les dialogues
+const messages = {
+    en: {
+        dialogTitle: "Select Account",
+        dialogDescription: "Please select an account to continue.",
+        cancelButton: "Cancel",
+        confirmButton: "Confirm",
+    },
+    fr: {
+        dialogTitle: "Sélectionner un compte",
+        dialogDescription: "Veuillez sélectionner un compte pour continuer.",
+        cancelButton: "Annuler",
+        confirmButton: "Confirmer",
+    }
+};
+
+// Détecter la langue du navigateur et assurer que c'est une des clés de messages
+const browserLanguage = (navigator.language.split('-')[0] as keyof typeof messages);
+
+// Sélectionner les messages en fonction de la langue détectée
+const selectedMessages = messages[browserLanguage] || messages.en;
+
+export const useSelectAccount = (): [() => JSX.Element, () => Promise<string | undefined>] => {
 
     const accountQuery = useGetAccounts();
     const accountMutation = useCreateAccount();
@@ -53,8 +75,8 @@ export const useSelectAccount = (): [() => JSX.Element, () => Promise<unknown>] 
         <Dialog open={promise !== null}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Select Account</DialogTitle>
-                    <DialogDescription>Please select an account to continue.</DialogDescription>
+                    <DialogTitle>{selectedMessages.dialogTitle}</DialogTitle>
+                    <DialogDescription>{selectedMessages.dialogDescription}</DialogDescription>
                 </DialogHeader>
                 <Select
                     placeholder="Select an account"
@@ -65,10 +87,10 @@ export const useSelectAccount = (): [() => JSX.Element, () => Promise<unknown>] 
                 />
                 <DialogFooter className="pt-2">
                     <Button onClick={handleCancel} variant="outline">
-                        Cancel
+                        {selectedMessages.cancelButton}
                     </Button>
-                    <Button onClick={handleConfirm} >
-                        Confirm
+                    <Button onClick={handleConfirm}>
+                        {selectedMessages.confirmButton}
                     </Button>
                 </DialogFooter>
             </DialogContent>

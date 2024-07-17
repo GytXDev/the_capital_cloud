@@ -1,5 +1,4 @@
 // app/(dashboard)/accounts/page.tsx
-// app/(dashboard)/accounts/page.tsx
 "use client"
 import { Loader2, Plus } from "lucide-react"
 import { useNewAccount } from "@/features/accounts/hooks/use-new-account";

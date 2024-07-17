@@ -8,6 +8,26 @@ import { FaPiggyBank } from "react-icons/fa";
 import { FaArrowTrendUp, FaArrowTrendDown } from "react-icons/fa6";
 import { DataCard, DataCardLoading } from "./data-card";
 
+// Tableaux de traductions
+const translations = {
+    fr: {
+        remaining: "Capital",
+        income: "Revenu",
+        expenses: "Dépenses",
+    },
+    en: {
+        remaining: "Remaining",
+        income: "Income",
+        expenses: "Capital",
+    },
+};
+
+// Détecter la langue du navigateur et s'assurer que c'est une des clés de messages
+const browserLanguage = (navigator.language.split('-')[0] as keyof typeof translations) || 'en';
+
+// Sélectionner les messages en fonction de la langue détectée
+const selectedTranslations = translations[browserLanguage];
+
 export const DataGrid = () => {
     const { data, isLoading } = useGetSummary();
     const params = useSearchParams();
@@ -29,7 +49,7 @@ export const DataGrid = () => {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-2">
             <DataCard
-                title="Remaining"
+                title={selectedTranslations.remaining}
                 value={data?.remainingAmount}
                 percentageChange={data?.remainingChange}
                 icon={FaPiggyBank}
@@ -37,7 +57,7 @@ export const DataGrid = () => {
                 dateRange={dateRangeLabel}
             />
             <DataCard
-                title="Income"
+                title={selectedTranslations.income}
                 value={data?.incomeAmount}
                 percentageChange={data?.incomeChange}
                 icon={FaArrowTrendUp}
@@ -45,7 +65,7 @@ export const DataGrid = () => {
                 dateRange={dateRangeLabel}
             />
             <DataCard
-                title="Expenses"
+                title={selectedTranslations.expenses}
                 value={data?.expensesAmount}
                 percentageChange={data?.expenseChange}
                 icon={FaArrowTrendDown}

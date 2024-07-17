@@ -22,6 +22,23 @@ type Props = {
     onSubmit: (data: any) => void;
 }
 
+const translations = {
+    fr: {
+        importTransaction: "Importer transactions",
+        cancel: "Annuler",
+        continue: "Continuer",
+    },
+    en: {
+        importTransaction: "Import Transaction",
+        cancel: "Cancel",
+        continue: "Continue",
+    },
+};
+
+const browserLanguage = (navigator.language.split('-')[0] as keyof typeof translations) || 'en';
+
+const selectedTranslations = translations[browserLanguage];
+
 const parseDate = (dateString: string) => {
     let parsedDate = parse(dateString, dateFormat1, new Date());
     if (!isValid(parsedDate)) {
@@ -106,12 +123,12 @@ export const ImportCard = ({ data, onCancel, onSubmit }: Props) => {
             <Card className="border-none drop-shadow-sm">
                 <CardHeader className="gap-y-2 lg:flex-row lg:items-center lg:justify-between">
                     <CardTitle className="text-xl line-clamp-1">
-                        Import Transaction
+                        {selectedTranslations.importTransaction}
                     </CardTitle>
                     <div className="flex flex-col lg:flex-row gap-y-2 items-center gap-x-2">
-                        <Button onClick={onCancel} size="sm" className="w-full lg:w-auto">Cancel</Button>
+                        <Button onClick={onCancel} size="sm" className="w-full lg:w-auto">{selectedTranslations.cancel}</Button>
                         <Button size="sm" disabled={progress < requiredOptions.length} onClick={handleContinue} className="w-full lg:w-auto">
-                            Continue ({progress} / {requiredOptions.length})
+                            {selectedTranslations.continue} ({progress} / {requiredOptions.length})
                         </Button>
                     </div>
                 </CardHeader>

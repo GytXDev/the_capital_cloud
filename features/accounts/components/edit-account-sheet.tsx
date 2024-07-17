@@ -1,71 +1,70 @@
-// features/accounts/components/new-account-sheet.tsx
+// features/accounts/components/edit-account-sheet.tsx
 import { z } from "zod";
-
-import { useOpenAccount } from "../hooks/use-open-account";
+import { Loader2 } from "lucide-react";
+import { useConfirm } from "@/hooks/use-confirm";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { AccountForm } from "@/features/accounts/components/account-form";
 import { useGetAccount } from "../api/use-get-account";
-import { insertAccountSchema } from "@/db/schema";
 import { useEditAccount } from "../api/use-edit-account";
 import { useDeleteAccount } from "../api/use-delete-account";
-import { useConfirm } from "@/hooks/use-confirm";
-import { Loader2 } from "lucide-react";
-import {
-    Sheet,
-    SheetContent,
-    SheetDescription,
-    SheetHeader,
-    SheetTitle
-} from "@/components/ui/sheet";
-
+import { insertAccountSchema } from "@/db/schema";
+import { useOpenAccount } from "../hooks/use-open-account";
 
 const formSchema = insertAccountSchema.pick({
-    name: true
+    name: true,
 });
 
 type FormValues = z.input<typeof formSchema>;
 
 export const EditAccountSheet = () => {
     const { isOpen, onClose, id } = useOpenAccount();
-
-    const [ConfirmDialog, confirm] = useConfirm(
-        "Are you sure?",
-        "You are about to delete this account."
-    )
-
+    const [ConfirmDialog, confirm] = useConfirm("Are you sure?", "You are about to delete this account.");
     const accountQuery = useGetAccount(id);
     const editMutation = useEditAccount(id);
     const deleteMutation = useDeleteAccount(id);
-
     const isPending = editMutation.isPending || deleteMutation.isPending;
-
     const isLoading = accountQuery.isLoading;
 
     const onSubmit = (values: FormValues) => {
         editMutation.mutate(values, {
             onSuccess: () => {
                 onClose();
-            }
+            },
         });
-
     };
 
     const onDelete = async () => {
         const ok = await confirm();
-
         if (ok) {
             deleteMutation.mutate(undefined, {
                 onSuccess: () => {
                     onClose();
-                }
-            })
+                },
+            });
         }
-    }
-
-    const defaultValues = accountQuery.data ? {
-        name: accountQuery.data.name
-    } : {
-        name: "",
     };
+
+    const defaultValues = accountQuery.data ? { name: accountQuery.data.name } : { name: "" };
+
+    // Messages traduits pour les étiquettes et placeholders
+    const messages = {
+        en: {
+            editAccountTitle: "Edit Account",
+            editAccountDescription: "Edit an existing account",
+            deleteAccount: "Delete account",
+        },
+        fr: {
+            editAccountTitle: "Modifier le compte",
+            editAccountDescription: "Modifier un compte existant",
+            deleteAccount: "Supprimer le compte",
+        },
+    };
+
+    // Détecter la langue du navigateur et assurer que c'est une des clés de messages
+    const browserLanguage = (navigator.language.split("-")[0] as keyof typeof messages);
+    
+    // Sélectionner les messages en fonction de la langue détectée
+    const selectedMessages = messages[browserLanguage] || messages.en;
 
     return (
         <>
@@ -73,19 +72,15 @@ export const EditAccountSheet = () => {
             <Sheet open={isOpen} onOpenChange={onClose}>
                 <SheetContent className="space-y-4">
                     <SheetHeader>
-                        <SheetTitle>
-                            Edit Account
-                        </SheetTitle>
-                        <SheetDescription>
-                            Edit an existing account
-                        </SheetDescription>
+                        <SheetTitle>{selectedMessages.editAccountTitle}</SheetTitle>
+                        <SheetDescription>{selectedMessages.editAccountDescription}</SheetDescription>
                     </SheetHeader>
                     {isLoading ? (
                         <div className="absolute inset-0 flex items-center justify-center">
                             <Loader2 className="size-4 text-muted-foreground animate-spin" />
                         </div>
                     ) : (
-                        < AccountForm
+                        <AccountForm
                             id={id}
                             onSubmit={onSubmit}
                             disabled={isPending}
@@ -93,7 +88,6 @@ export const EditAccountSheet = () => {
                             onDelete={onDelete}
                         />
                     )}
-
                 </SheetContent>
             </Sheet>
         </>

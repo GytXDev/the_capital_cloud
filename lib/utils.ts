@@ -18,7 +18,7 @@ export function convertAmountToMiliunits(amount: number) {
 export function formatCurrency(value: number) {
   return Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "USD",
+    currency: "XAF",
     minimumFractionDigits: 2,
   }).format(value);
 };
@@ -70,21 +70,14 @@ type Period = {
   to: string | Date | undefined;
 };
 
-export function formatDateRange(period?: Period) {
+export function formatDateRange(period?: Period, locale = 'en-US') {
   const defaultTo = new Date();
   const defaultFrom = subDays(defaultTo, 30);
-
-  const locale = navigator.language || "en-US";
 
   const formatDate = (date: Date) => {
     const day = date.getDate();
     const monthAbbr = new Intl.DateTimeFormat(locale, { month: 'short' }).format(date);
-    const year = new Intl.DateTimeFormat(locale, { year: "numeric" }).format(date);
-
-    // Manage the abbreviation of the month without the period
-    const monthAbbrWithoutDot = monthAbbr.replace(/\.$/, '');
-
-    return `${day} ${monthAbbrWithoutDot}`;
+    return `${day} ${monthAbbr}`;
   };
 
   if (!period?.from) {
@@ -98,14 +91,10 @@ export function formatDateRange(period?: Period) {
     return formatDate(from);
   }
 
-  // Check if the dates are in the same year
-  const sameYear = from.getFullYear() === to.getFullYear();
   const formattedFrom = formatDate(from);
   const formattedTo = formatDate(to);
 
-  return sameYear
-    ? `${formattedFrom} - ${formattedTo} ${to.getFullYear()}`
-    : `${formattedFrom} ${from.getFullYear()} - ${formattedTo} ${to.getFullYear()}`;
+  return `${formattedFrom} - ${formattedTo} ${to.getFullYear()}`;
 }
 
 export function formatPercentage(
@@ -128,4 +117,3 @@ export function formatPercentage(
 
   return formattedValue;
 }
-

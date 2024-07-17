@@ -14,7 +14,7 @@ const routes = app
     .route("/summary", summary)
     .route("/accounts", accounts)
     .route("/categories", categories)
-    .route("/transactions", transactions);
+    .route("/transactions", transactions)
 
 
 export const GET = handle(app);

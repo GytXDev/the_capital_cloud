@@ -13,27 +13,42 @@ import {
 
 import { Button } from "@/components/ui/button";
 
+// Définition des routes avec les labels traduits
 const routes = [
     {
         href: "/",
-        label: "Overview",
+        label: {
+            en: "Overview",
+            fr: "Vue d'ensemble",
+        },
     },
     {
         href: "/transactions",
-        label: "Transactions"
+        label: {
+            en: "Transactions",
+            fr: "Transactions",
+        }
     },
     {
         href: "/accounts",
-        label: "Accounts"
+        label: {
+            en: "Accounts",
+            fr: "Comptes",
+        }
     },
     {
         href: "/categories",
-        label: "Categories"
-    }
-    ,
+        label: {
+            en: "Categories",
+            fr: "Catégories",
+        }
+    },
     {
         href: "/settings",
-        label: "Settings"
+        label: {
+            en: "Settings",
+            fr: "Paramètres",
+        }
     }
 ];
 
@@ -42,12 +57,16 @@ export const Navigation = () => {
     const router = useRouter();
     const isMobile = useMedia("(max-width: 1024px)", false);
     const pathname = usePathname();
-
-    console.log({ isMobile })
+    const browserLanguage = navigator.language.split('-')[0]; // Obtenir la langue principale du navigateur
 
     const onClick = (href: string) => {
         router.push(href);
         setIsOpen(false);
+    };
+
+    // Fonction pour obtenir le label dans la langue du navigateur
+    const getLabel = (labels: { [key: string]: string }) => {
+        return labels[browserLanguage] || labels.en; // Priorité à la langue du navigateur, sinon anglais par défaut
     };
 
     if (isMobile) {
@@ -71,8 +90,7 @@ export const Navigation = () => {
                                 onClick={() => onClick(route.href)}
                                 className="w-full justify-start"
                             >
-                                {route.label}
-
+                                {getLabel(route.label)}
                             </Button>
                         ))}
                     </nav>
@@ -87,10 +105,10 @@ export const Navigation = () => {
                 <NavButton
                     key={route.href}
                     href={route.href}
-                    label={route.label}
+                    label={getLabel(route.label)}
                     isActive={pathname === route.href}
                 />
             ))}
         </nav>
     )
-} 
+}

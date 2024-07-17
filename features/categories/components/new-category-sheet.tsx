@@ -12,6 +12,24 @@ import {
     SheetTitle
 } from "@/components/ui/sheet";
 
+// Messages traduits pour le titre et la description
+const messages = {
+    en: {
+        title: "New Category",
+        description: "Create a new category to organize your transactions",
+    },
+    fr: {
+        title: "Nouvelle catégorie",
+        description: "Créer une nouvelle catégorie pour organiser vos transactions",
+    }
+};
+
+// Détecter la langue du navigateur et assurer que c'est une des clés de messages
+const browserLanguage = (navigator.language.split('-')[0] as keyof typeof messages);
+
+// Sélectionner les messages en fonction de la langue détectée
+const selectedMessages = messages[browserLanguage] || messages.en;
+
 const formSchema = insertCategorySchema.pick({
     name: true
 });
@@ -36,10 +54,10 @@ export const NewCategorySheet = () => {
             <SheetContent className="space-y-4">
                 <SheetHeader>
                     <SheetTitle>
-                        New Category
+                        {selectedMessages.title}
                     </SheetTitle>
                     <SheetDescription>
-                        Create a new category to organize your transactions
+                        {selectedMessages.description}
                     </SheetDescription>
                 </SheetHeader>
                 <CategoryForm

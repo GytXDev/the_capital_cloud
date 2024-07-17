@@ -20,6 +20,18 @@ import { useCreateAccount } from "@/features/accounts/api/use-create-accounts";
 import { TransactionForm } from "./transaction-form";
 import { Loader2 } from "lucide-react";
 
+const messages = {
+    en: {
+        newTransactionTitle: "New Transaction",
+        newTransactionDescription: "Add a new transaction",
+    },
+    fr: {
+        newTransactionTitle: "Nouvelle transaction",
+        newTransactionDescription: "Ajouter une nouvelle transaction",
+    },
+};
+
+
 const formSchema = insertTransactionSchema.omit({
     id: true
 });
@@ -27,6 +39,7 @@ const formSchema = insertTransactionSchema.omit({
 type FormValues = z.input<typeof formSchema>;
 
 export const NewTransactionSheet = () => {
+    const currentLanguage = navigator.language.split('-')[0] as 'en' | 'fr';
     const { isOpen, onClose } = useNewTransaction();
 
     const createMutation = useCreateTransaction();
@@ -36,7 +49,7 @@ export const NewTransactionSheet = () => {
     const onCreateCategory = (name: string) => categoryMutation.mutate({
         name
     });
-    const categoryOptions = (categoryQuery.data ?? []).map((category) => ({
+    const categoryOptions = (categoryQuery.data ?? []).map((category: { name: any; id: any; }) => ({
         label: category.name,
         value: category.id,
     }));
@@ -46,7 +59,7 @@ export const NewTransactionSheet = () => {
     const onCreateAccount = (name: string) => accountMutation.mutate({
         name
     });
-    const accountOptions = (accountQuery.data ?? []).map((account) => ({
+    const accountOptions = (accountQuery.data ?? []).map((account: { name: any; id: any; }) => ({
         label: account.name,
         value: account.id,
     }));
@@ -72,10 +85,10 @@ export const NewTransactionSheet = () => {
             <SheetContent className="space-y-4">
                 <SheetHeader>
                     <SheetTitle>
-                        New Transaction
+                        {messages[currentLanguage]?.newTransactionTitle || messages.en.newTransactionTitle }
                     </SheetTitle>
                     <SheetDescription>
-                        Add a new transaction
+                        {messages[currentLanguage]?.newTransactionDescription || messages.en.newTransactionDescription}
                     </SheetDescription>
                 </SheetHeader>
                 {isLoading

@@ -15,13 +15,35 @@ type Props = {
     id: string;
 };
 
+const translations = {
+    fr: {
+        confirmDeleteTitle: "Êtes-vous sûr ?",
+        confirmDeleteMessage: "Vous êtes sur le point de supprimer cette transaction",
+        edit: "Modifier",
+        delete: "Supprimer",
+    },
+    en: {
+        confirmDeleteTitle: "Are you sure?",
+        confirmDeleteMessage: "You are about to delete this transaction",
+        edit: "Edit",
+        delete: "Delete",
+    },
+};
+
+// Détecter la langue du navigateur et s'assurer que c'est une des clés de messages
+const browserLanguage = (navigator.language.split('-')[0] as keyof typeof translations) || 'en';
+
+// Sélectionner les messages en fonction de la langue détectée
+const selectedTranslations = translations[browserLanguage];
+
+
 export const Actions = ({ id }: Props) => {
     const [ConfirmDialog, confirm] = useConfirm(
-        "Are you sure?",
-        "You are about to delete this transaction"
-    );
+        (selectedTranslations.confirmDeleteTitle),
+        (selectedTranslations.confirmDeleteMessage
+        ));
 
-    const deleteMutation =  useDeleteTransaction(id);
+    const deleteMutation = useDeleteTransaction(id);
     const { onOpen } = useOpenTransaction();
 
     const handleDelete = async () => {
@@ -46,14 +68,14 @@ export const Actions = ({ id }: Props) => {
                         onClick={() => { onOpen(id); }}
                     >
                         <Edit className="size-4 mr-2" />
-                        Edit
+                        {selectedTranslations.edit}
                     </DropdownMenuItem>
                     <DropdownMenuItem
                         disabled={deleteMutation.isPending}
                         onClick={handleDelete}
                     >
                         <Trash className="size-4 mr-2" />
-                        Delete
+                        {selectedTranslations.delete}
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>

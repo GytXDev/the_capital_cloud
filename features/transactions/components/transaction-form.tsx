@@ -21,6 +21,40 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 
+const messages = {
+    en: {
+        accountLabel: "Account",
+        categoryLabel: "Category",
+        payeeLabel: "Payee",
+        amountLabel: "Amount",
+        notesLabel: "Notes",
+        accountPlaceholder: "Select an account",
+        categoryPlaceholder: "Select a category",
+        payeePlaceholder: "Add a payee",
+        amountPlaceholder: "0.00",
+        notesPlaceholder: "Optional notes",
+        saveChangesButton: "Save changes",
+        createTransactionButton: "Create transaction",
+        deleteTransactionButton: "Delete transaction",
+    },
+    fr: {
+        accountLabel: "Compte",
+        categoryLabel: "Catégorie",
+        payeeLabel: "Bénéficiaire",
+        amountLabel: "Montant",
+        notesLabel: "Notes",
+        accountPlaceholder: "Sélectionnez un compte",
+        categoryPlaceholder: "Sélectionnez une catégorie",
+        payeePlaceholder: "Ajouter un bénéficiaire",
+        amountPlaceholder: "0,00",
+        notesPlaceholder: "Notes optionnelles",
+        saveChangesButton: "Enregistrer les modifications",
+        createTransactionButton: "Créer une transaction",
+        deleteTransactionButton: "Supprimer la transaction",
+    },
+};
+
+
 const formSchema = z.object({
     date: z.coerce.date(),
     accountId: z.string(),
@@ -68,7 +102,6 @@ export const TransactionForm = ({
     const handleSubmit = (values: FormValues) => {
         const amount = parseFloat(values.amount);
         if (isNaN(amount)) {
-            // Gestion d'erreur si la conversion échoue
             console.error("Invalid amount");
             return;
         }
@@ -77,13 +110,16 @@ export const TransactionForm = ({
         onSubmit({
             ...values,
             amount: amountInMiliunits,
-            id: id || '',  // Ajoute la propriété id si elle est disponible
+            id: id || '',
         });
     };
 
     const handleDelete = () => {
         onDelete?.();
     };
+
+    // Définir la langue actuelle
+    const currentLanguage = navigator.language.split('-')[0] as 'en' | 'fr';
 
     return (
         <Form {...form}>
@@ -109,11 +145,11 @@ export const TransactionForm = ({
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>
-                                Account
+                                {messages[currentLanguage]?.accountLabel || messages.en.accountLabel}
                             </FormLabel>
                             <FormControl>
                                 <Select
-                                    placeholder="Select an account"
+                                    placeholder={messages[currentLanguage]?.accountPlaceholder || messages.en.accountPlaceholder}
                                     options={accountOptions}
                                     onCreate={onCreateAccount}
                                     value={field.value}
@@ -130,11 +166,11 @@ export const TransactionForm = ({
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>
-                                Category
+                                {messages[currentLanguage]?.categoryLabel || messages.en.categoryLabel}
                             </FormLabel>
                             <FormControl>
                                 <Select
-                                    placeholder="Select a category"
+                                    placeholder={messages[currentLanguage]?.categoryPlaceholder || messages.en.categoryPlaceholder}
                                     options={categoryOptions}
                                     onCreate={onCreateCategory}
                                     value={field.value}
@@ -151,12 +187,12 @@ export const TransactionForm = ({
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>
-                                Payee
+                                {messages[currentLanguage]?.payeeLabel || messages.en.payeeLabel}
                             </FormLabel>
                             <FormControl>
                                 <Input
                                     disabled={disabled}
-                                    placeholder="Add a payee"
+                                    placeholder={messages[currentLanguage]?.payeePlaceholder || messages.en.payeePlaceholder}
                                     {...field}
                                 />
                             </FormControl>
@@ -169,12 +205,12 @@ export const TransactionForm = ({
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>
-                                Amount
+                                {messages[currentLanguage]?.amountLabel || messages.en.amountLabel}
                             </FormLabel>
                             <FormControl>
                                 <AmountInput
                                     disabled={disabled}
-                                    placeholder="0.00"
+                                    placeholder={messages[currentLanguage]?.amountPlaceholder || messages.en.amountPlaceholder}
                                     {...field}
                                 />
                             </FormControl>
@@ -187,21 +223,21 @@ export const TransactionForm = ({
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>
-                                Notes
+                                {messages[currentLanguage]?.notesLabel || messages.en.notesLabel}
                             </FormLabel>
                             <FormControl>
                                 <Textarea
                                     {...field}
                                     value={field.value ?? ""}
                                     disabled={disabled}
-                                    placeholder="Optional notes"
+                                    placeholder={messages[currentLanguage]?.notesPlaceholder || messages.en.notesPlaceholder}
                                 />
                             </FormControl>
                         </FormItem>
                     )}
                 />
                 <Button className="w-full" disabled={disabled}>
-                    {id ? "Save changes" : "Create account"}
+                    {id ? messages[currentLanguage]?.saveChangesButton || messages.en.saveChangesButton : messages[currentLanguage]?.createTransactionButton || messages.en.createTransactionButton}
                 </Button>
                 {!!id && (
                     <Button
@@ -212,7 +248,7 @@ export const TransactionForm = ({
                         variant="outline"
                     >
                         <Trash className="size-4 mr-2" />
-                        Delete transaction
+                        {messages[currentLanguage]?.deleteTransactionButton || messages.en.deleteTransactionButton}
                     </Button>
                 )}
             </form>

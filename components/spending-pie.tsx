@@ -27,6 +27,33 @@ type Props = {
     }[];
 };
 
+
+// Tableaux de traductions
+const translations = {
+    fr: {
+        categories: "Catégories",
+        chartType: "Type de graphique",
+        pieChart: "Diagramme circulaire",
+        radarChart: "Diagramme radar",
+        radialChart: "Diagramme radial",
+        noData: "Pas de données pour cette période",
+    },
+    en: {
+        categories: "Categories",
+        chartType: "Chart type",
+        pieChart: "Pie chart",
+        radarChart: "Radar chart",
+        radialChart: "Radial chart",
+        noData: "No data for this period",
+    },
+};
+
+// Détecter la langue du navigateur et s'assurer que c'est une des clés de messages
+const browserLanguage = (navigator.language.split('-')[0] as keyof typeof translations);
+
+// Sélectionner les messages en fonction de la langue détectée
+const selectedTranslations = translations[browserLanguage] || translations.en;
+
 export const SpendingPie = ({ data = [] }: Props) => {
     const [chartType, setChartType] = useState("pie");
 
@@ -38,7 +65,7 @@ export const SpendingPie = ({ data = [] }: Props) => {
         <Card className="border-none drop-shadow-sm">
             <CardHeader className="flex space-y-2 lg:space-y-0 lg:flex-row lg:items-center justify-between">
                 <CardTitle className="text-xl line-clamp-1">
-                    Categories
+                    {selectedTranslations.categories}
                 </CardTitle>
                 <Select
                     defaultValue={chartType}
@@ -52,7 +79,7 @@ export const SpendingPie = ({ data = [] }: Props) => {
                             <div className="flex items-center">
                                 <PieChart className="size-4 mr-2 shrink-0" />
                                 <p className="line-clamp-1">
-                                    Pie chart
+                                {selectedTranslations.pieChart}
                                 </p>
                             </div>
                         </SelectItem>
@@ -60,7 +87,7 @@ export const SpendingPie = ({ data = [] }: Props) => {
                             <div className="flex items-center">
                                 <Radar className="size-4 mr-2 shrink-0" />
                                 <p className="line-clamp-1">
-                                    Radar chart
+                                    {selectedTranslations.radarChart}
                                 </p>
                             </div>
                         </SelectItem>
@@ -68,7 +95,7 @@ export const SpendingPie = ({ data = [] }: Props) => {
                             <div className="flex items-center">
                                 <Target className="size-4 mr-2 shrink-0" />
                                 <p className="line-clamp-1">
-                                    Radial chart
+                                    {selectedTranslations.radialChart}
                                 </p>
                             </div>
                         </SelectItem>
@@ -80,7 +107,7 @@ export const SpendingPie = ({ data = [] }: Props) => {
                     <div className="flex flex-col gap-y-4 items-center justify-center h-[350px} w-full">
                         <FileSearch className="size-6 text-muted-foreground" />
                         <p className="text-muted-foreground text-sm">
-                            No data for this period
+                           {selectedTranslations.noData}
                         </p>
                     </div>
                 ) : (
@@ -99,12 +126,12 @@ export const SpendingPieLoading = () => {
     return (
         <Card className="border-none drop-shadow-sm">
             <CardHeader className="flex space-y-2 lg:space-y-0 lg:flex-row lg:items-center justify-between">
-                <Skeleton className="h-8 w-48"/>
-                <Skeleton className="h-8 lg:w-[120px] w-full"/>
+                <Skeleton className="h-8 w-48" />
+                <Skeleton className="h-8 lg:w-[120px] w-full" />
             </CardHeader>
             <CardContent>
                 <div className="h-[350px] w-full flex items-center justify-center">
-                    <Loader className="h-6 w-6 text-slate-300 animate-spin"/>
+                    <Loader className="h-6 w-6 text-slate-300 animate-spin" />
                 </div>
             </CardContent>
         </Card>

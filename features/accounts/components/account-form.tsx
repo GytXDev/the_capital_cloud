@@ -16,6 +16,30 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 
+// Messages traduits pour les étiquettes et placeholders
+const messages = {
+    en: {
+        nameLabel: "Name",
+        namePlaceholder: "e.g. Cash, Bank, Credit Card",
+        saveChanges: "Save changes",
+        createAccount: "Create account",
+        deleteAccount: "Delete account",
+    },
+    fr: {
+        nameLabel: "Nom",
+        namePlaceholder: "ex. Espèces, Banque, Carte de crédit",
+        saveChanges: "Enregistrer les modifications",
+        createAccount: "Créer un compte",
+        deleteAccount: "Supprimer le compte",
+    }
+};
+
+// Détecter la langue du navigateur et assurer que c'est une des clés de messages
+const browserLanguage = (navigator.language.split('-')[0] as keyof typeof messages);
+
+// Sélectionner les messages en fonction de la langue détectée
+const selectedMessages = messages[browserLanguage] || messages.en;
+
 const formSchema = insertAccountSchema.pick({
     name: true,
 });
@@ -60,12 +84,12 @@ export const AccountForm = ({
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>
-                                Name
+                                {selectedMessages.nameLabel}
                             </FormLabel>
                             <FormControl>
                                 <Input
                                     disabled={disabled}
-                                    placeholder="e.g. Cash, Bank, Credit Card"
+                                    placeholder={selectedMessages.namePlaceholder}
                                     {...field}
                                 />
                             </FormControl>
@@ -73,7 +97,7 @@ export const AccountForm = ({
                     )}
                 />
                 <Button className="w-full" disabled={disabled}>
-                    {id ? "Save changes" : "Create account"}
+                    {id ? selectedMessages.saveChanges : selectedMessages.createAccount}
                 </Button>
                 {!!id && (
                     <Button
@@ -84,7 +108,7 @@ export const AccountForm = ({
                         variant="outline"
                     >
                         <Trash className="size-4 mr-2" />
-                        Delete account
+                        {selectedMessages.deleteAccount}
                     </Button>
                 )}
             </form>

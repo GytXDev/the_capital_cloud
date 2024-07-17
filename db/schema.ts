@@ -1,7 +1,7 @@
 // db/schema.ts
 import { z } from "zod";
 import { createInsertSchema } from "drizzle-zod";
-import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { integer, pgTable, text, timestamp, decimal, date, } from "drizzle-orm/pg-core";
 import { createId } from "@paralleldrive/cuid2"
 import { relations } from "drizzle-orm";
 

@@ -1,11 +1,16 @@
-"use client"; 
+// components/header.tsx
+"use client";
 
-import { Loader2 } from "lucide-react";
-import HeaderLogo from "./header-logo"
-import { Navigation } from "./navigation"
-import { UserButton, ClerkLoading, ClerkLoaded } from "@clerk/nextjs";
-import { WelcomeMsg } from "./welcome-msg";
-import { Filters } from "./filters";
+import dynamic from 'next/dynamic';
+
+// Importez votre composant WelcomeMsg avec dynamic
+const WelcomeMsg = dynamic(() => import('./welcome-msg').then(mod => mod.WelcomeMsg), { ssr: false });
+const Filters = dynamic(() => import('./filters').then(mod => mod.Filters), { ssr: false });
+
+import { Loader2 } from 'lucide-react';
+import HeaderLogo from './header-logo';
+import { Navigation } from './navigation';
+import { UserButton, ClerkLoading, ClerkLoaded } from '@clerk/nextjs';
 
 export const Header = () => {
     return (
@@ -23,9 +28,9 @@ export const Header = () => {
                         <Loader2 className="size-8 animate-spin text-slate-400" />
                     </ClerkLoading>
                 </div>
-                <WelcomeMsg />
-                <Filters/>
+                <WelcomeMsg /> {/* Utilisation de WelcomeMsg dynamique */}
+                <Filters /> {/* Utilisation de Filters dynamique */}
             </div>
         </header>
-    )
-}
+    );
+};

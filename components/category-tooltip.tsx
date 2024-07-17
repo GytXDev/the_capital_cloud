@@ -4,6 +4,22 @@ import { format } from "date-fns";
 import { formatCurrency } from "@/lib/utils";
 import { Separator } from "./ui/separator";
 
+// Tableaux de traductions
+const translations = {
+    fr: {
+        expenses: "Dépenses",
+    },
+    en: {
+        expenses: "Expenses",
+    },
+};
+
+// Détecter la langue du navigateur et s'assurer que c'est une des clés de messages
+const browserLanguage = (navigator.language.split('-')[0] as keyof typeof translations) || 'en';
+
+// Sélectionner les messages en fonction de la langue détectée
+const selectedTranslations = translations[browserLanguage];
+
 export const CategoryTooltip = ({ active, payload }: any) => {
     if (!active) return null;
 
@@ -21,7 +37,7 @@ export const CategoryTooltip = ({ active, payload }: any) => {
                     <div className="flex items-center gap-x-2">
                         <div className="size-1.5 bg-rose-500 rounded-full" />
                         <p className="text-sm text-muted-foreground">
-                            Expenses
+                            {selectedTranslations.expenses}
                         </p>
                     </div>
                     <p className="text-sm text-right font-medium">
@@ -30,6 +46,5 @@ export const CategoryTooltip = ({ active, payload }: any) => {
                 </div>
             </div>
         </div>
-
     )
 }

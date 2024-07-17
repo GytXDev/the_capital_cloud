@@ -1,5 +1,5 @@
-import React from "react"
-import { Trash } from "lucide-react"
+import React from "react";
+import { Trash } from "lucide-react";
 import {
     ColumnDef,
     ColumnFiltersState,
@@ -11,7 +11,7 @@ import {
     getPaginationRowModel,
     getSortedRowModel,
     useReactTable,
-} from "@tanstack/react-table"
+} from "@tanstack/react-table";
 
 import {
     Table,
@@ -20,17 +20,47 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table"
-import { Input } from "@/components/ui/input"
-import { useConfirm } from "@/hooks/use-confirm"
-import { Button } from "./ui/button"
+} from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import { useConfirm } from "@/hooks/use-confirm";
+import { Button } from "./ui/button";
+
+// Tableaux de traductions
+const translations = {
+    fr: {
+        filterPlaceholder: "Filtrer",
+        delete: "Supprimer",
+        deleteConfirmation: "Êtes-vous sûr ?",
+        deleteBulkMessage: "Vous êtes sur le point de supprimer en masse.",
+        noResults: "Aucun résultat.",
+        selectedRows: "ligne(s) sélectionnée(s).",
+        previous: "Précédent",
+        next: "Suivant"
+    },
+    en: {
+        filterPlaceholder: "Filter",
+        delete: "Delete",
+        deleteConfirmation: "Are you sure?",
+        deleteBulkMessage: "You are about to perform a bulk delete.",
+        noResults: "No results.",
+        selectedRows: "row(s) selected.",
+        previous: "Previous",
+        next: "Next"
+    },
+};
+
+// Détecter la langue du navigateur et s'assurer que c'est une des clés de messages
+const browserLanguage = (navigator.language.split('-')[0] as keyof typeof translations) || 'en';
+
+// Sélectionner les messages en fonction de la langue détectée
+const selectedTranslations = translations[browserLanguage];
 
 interface DataTableProps<TData, TValue> {
-    columns: ColumnDef<TData, TValue>[]
-    data: TData[]
-    filterKey: string
+    columns: ColumnDef<TData, TValue>[];
+    data: TData[];
+    filterKey: string; // Assurer que filterKey est une chaîne de caractères
     onDelete: (rows: Row<TData>[]) => void;
-    disabled?: boolean
+    disabled?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -41,17 +71,17 @@ export function DataTable<TData, TValue>({
     disabled,
 }: DataTableProps<TData, TValue>) {
     const [ConfirmDialog, confirm] = useConfirm(
-        "Are you sure?",
-        "You are about to perform a bulk delete."
-    )
+        selectedTranslations.deleteConfirmation,
+        selectedTranslations.deleteBulkMessage
+    );
 
-    const [sorting, setSorting] = React.useState<SortingState>([])
+    const [sorting, setSorting] = React.useState<SortingState>([]);
 
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
-    )
+    );
 
-    const [rowSelection, setRowSelection] = React.useState({})
+    const [rowSelection, setRowSelection] = React.useState({});
 
     const table = useReactTable({
         data,
@@ -75,11 +105,10 @@ export function DataTable<TData, TValue>({
             <ConfirmDialog />
             <div className="flex items-center py-4">
                 <Input
-                    placeholder={`Filter ${filterKey}...`}
-                    value={(table.getColumn(filterKey)?.getFilterValue() as string) ?? ""
-                    }
+                    placeholder={`${selectedTranslations.filterPlaceholder} bénéficiaire...`}
+                    value={(table.getColumn(filterKey as string)?.getFilterValue() as string) ?? ""}
                     onChange={(event) =>
-                        table.getColumn(filterKey)?.setFilterValue(event.target.value)
+                        table.getColumn(filterKey as string)?.setFilterValue(event.target.value)
                     }
                     className="max-w-sm"
                 />
@@ -92,13 +121,13 @@ export function DataTable<TData, TValue>({
                         onClick={async () => {
                             const ok = await confirm();
                             if (ok) {
-                                onDelete(table.getFilteredSelectedRowModel().rows)
+                                onDelete(table.getFilteredSelectedRowModel().rows);
                                 table.resetRowSelection();
                             }
                         }}
                     >
                         <Trash className="size-4 mr-2" />
-                        Delete ({table.getFilteredSelectedRowModel().rows.length})
+                        {selectedTranslations.delete} ({table.getFilteredSelectedRowModel().rows.length})
                     </Button>
                 )}
             </div>
@@ -139,7 +168,7 @@ export function DataTable<TData, TValue>({
                         ) : (
                             <TableRow>
                                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                                    No results.
+                                    {selectedTranslations.noResults}
                                 </TableCell>
                             </TableRow>
                         )}
@@ -148,8 +177,8 @@ export function DataTable<TData, TValue>({
             </div>
             <div className="flex items-center justify-end space-x-2 py-4">
                 <div className="flex-1 text-sm text-muted-foreground">
-                    {table.getFilteredSelectedRowModel().rows.length} of{" "}
-                    {table.getFilteredRowModel().rows.length} row(s) selected.
+                    {table.getFilteredSelectedRowModel().rows.length} {selectedTranslations.selectedRows}{" "}
+                    {table.getFilteredRowModel().rows.length}.
                 </div>
 
                 <Button
@@ -158,7 +187,7 @@ export function DataTable<TData, TValue>({
                     onClick={() => table.previousPage()}
                     disabled={!table.getCanPreviousPage()}
                 >
-                    Previous
+                    {selectedTranslations.previous}
                 </Button>
                 <Button
                     variant="outline"
@@ -166,7 +195,7 @@ export function DataTable<TData, TValue>({
                     onClick={() => table.nextPage()}
                     disabled={!table.getCanNextPage()}
                 >
-                    Next
+                    {selectedTranslations.next}
                 </Button>
             </div>
         </div>

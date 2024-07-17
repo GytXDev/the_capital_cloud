@@ -1,20 +1,43 @@
-// components/custom-tooltip.tsx
 import { format } from "date-fns";
-
 import { formatCurrency } from "@/lib/utils";
 import { Separator } from "./ui/separator";
 
-export const CustomTooltip = ({ active, payload }: any) => {
-    if (!active) return null;
+interface CustomTooltipProps {
+    active?: boolean;
+    payload?: any;
+}
+
+// Tableaux de traductions
+const translations = {
+    fr: {
+        income: "Revenus",
+        expenses: "Dépenses",
+        dateFormat: "dd MMM yyyy"
+    },
+    en: {
+        income: "Income",
+        expenses: "Expenses",
+        dateFormat: "MMM dd, yyy"
+    },
+};
+
+// Détecter la langue du navigateur et s'assurer que c'est une des clés de messages
+const browserLanguage = (navigator.language.split('-')[0] as keyof typeof translations) || 'en';
+
+// Sélectionner les messages en fonction de la langue détectée
+const selectedTranslations = translations[browserLanguage];
+
+export const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
+    if (!active || !payload || !payload.length) return null;
 
     const date = payload[0].payload.date;
     const income = payload[0].value;
     const expenses = payload[1].value;
 
     return (
-        <div className="rounded-sm bg bg-white shadow-sm border overflow-hidden">
+        <div className="rounded-sm bg-white shadow-sm border overflow-hidden">
             <div className="text-sm p-2 px-3 bg-muted text-muted-foreground">
-                {format(date, "MMM dd, yyy")}
+                {format(date, selectedTranslations.dateFormat)}
             </div>
             <Separator />
             <div className="p-2 px-3 space-y-1">
@@ -22,7 +45,7 @@ export const CustomTooltip = ({ active, payload }: any) => {
                     <div className="flex items-center gap-x-2">
                         <div className="size-1.5 bg-blue-500 rounded-full" />
                         <p className="text-sm text-muted-foreground">
-                            Income
+                            {selectedTranslations.income}
                         </p>
                     </div>
                     <p className="text-sm text-right font-medium">
@@ -35,7 +58,7 @@ export const CustomTooltip = ({ active, payload }: any) => {
                     <div className="flex items-center gap-x-2">
                         <div className="size-1.5 bg-rose-500 rounded-full" />
                         <p className="text-sm text-muted-foreground">
-                            Expenses
+                            {selectedTranslations.expenses}
                         </p>
                     </div>
                     <p className="text-sm text-right font-medium">
@@ -44,6 +67,5 @@ export const CustomTooltip = ({ active, payload }: any) => {
                 </div>
             </div>
         </div>
-
-    )
-}
+    );
+};

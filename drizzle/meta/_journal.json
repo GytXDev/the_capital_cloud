@@ -22,6 +22,20 @@
       "when": 1720123085014,
       "tag": "0002_wise_stryfe",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1721015316278,
+      "tag": "0003_hot_azazel",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1721087361775,
+      "tag": "0004_productive_bruce_banner",
+      "breakpoints": true
     }
   ]
 }

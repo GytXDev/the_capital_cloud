@@ -7,8 +7,27 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { placeholder } from "drizzle-orm";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
+
+// Tableaux de traductions
+const translations = {
+    fr: {
+        useForIncome: "Utilisez [+] pour les revenus et [-] pour les dépenses",
+        income: "Ceci sera compté comme revenu",
+        expense: "Ceci sera compté comme dépense",
+    },
+    en: {
+        useForIncome: "Use [+] for income and [-] for expense",
+        income: "This will count as income",
+        expense: "This will count as an expense",
+    },
+};
+
+// Détecter la langue du navigateur et s'assurer que c'est une des clés de messages
+const browserLanguage = (navigator.language.split('-')[0] as keyof typeof translations) || 'en';
+
+// Sélectionner les messages en fonction de la langue détectée
+const selectedTranslations = translations[browserLanguage];
 
 type Props = {
     value: string;
@@ -53,7 +72,7 @@ export const AmountInput = ({
                         </button>
                     </TooltipTrigger>
                     <TooltipContent>
-                        Use [+] for income and [-] for expense
+                        {selectedTranslations.useForIncome}
                     </TooltipContent>
                 </Tooltip>
             </TooltipProvider>
@@ -68,8 +87,8 @@ export const AmountInput = ({
                 disabled={disabled}
             />
             <p className="text-xs text-muted-foreground mt-2">
-                {isIncome && "This will count as income"}
-                {isExpense && "This will count as an expense"}
+                {isIncome && selectedTranslations.income}
+                {isExpense && selectedTranslations.expense}
             </p>
         </div>
     )

@@ -28,6 +28,23 @@ const INITIAL_IMPORT_RESULTS = {
     meta: {},
 };
 
+const translations = {
+    fr: {
+        addNew: "Ajouter",
+        selectAccountError: "Veuillez sélectionner un compte pour continuer.",
+        transactionHistory: "Historique des transactions",
+    },
+    en: {
+        addNew: "Add new",
+        selectAccountError: "Please select an account to continue.",
+        transactionHistory: "Transaction History",
+    },
+};
+
+const browserLanguage = (navigator.language.split('-')[0] as keyof typeof translations) || 'en';
+const selectedTranslations = translations[browserLanguage];
+
+
 const TransactionsPage = () => {
     const [AccountDialog, confirm] = useSelectAccount();
     const [variant, setVariant] = useState<VARIANTS>(VARIANTS.LIST);
@@ -60,7 +77,7 @@ const TransactionsPage = () => {
     ) => {
         const accountId = await confirm();
         if (!accountId) {
-            return toast.error("Please select an account to continue.")
+            return toast.error(selectedTranslations.selectAccountError)
         }
 
         const data = values.map((value) => ({
@@ -110,7 +127,7 @@ const TransactionsPage = () => {
             <Card className="border-none drop-shadow-sm">
                 <CardHeader className="gap-y-2 lg:flex-row lg:items-center lg:justify-between">
                     <CardTitle className="text-xl line-clamp-1">
-                        Transaction History
+                        {selectedTranslations.transactionHistory}
                     </CardTitle>
                     <div className="flex flex-col gap-y-2 sm:flex-row sm:items-center sm:gap-x-2">
                         <Button onClick={newTransaction.onOpen}
@@ -118,7 +135,7 @@ const TransactionsPage = () => {
                             className="flex items-center gap-x-2"
                         >
                             <Plus className="size-4 mr-2" />
-                            Add new
+                            {selectedTranslations.addNew}
                         </Button>
                         <UploadButton
                             onUpload={onUpload}

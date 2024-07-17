@@ -13,8 +13,31 @@ import {
     FormField,
     FormItem,
     FormLabel,
-    FormMessage,
 } from "@/components/ui/form";
+
+// Messages traduits pour les actions et les libellés
+const messages = {
+    en: {
+        create: "Create category",
+        update: "Save changes",
+        delete: "Delete category",
+        nameLabel: "Name",
+        namePlaceholder: "e.g. Food, Transport, Salary, etc."
+    },
+    fr: {
+        create: "Créer catégorie",
+        update: "Enregistrer les changements",
+        delete: "Supprimer catégorie",
+        nameLabel: "Nom",
+        namePlaceholder: "ex. Nourriture, Transport, Salaire, etc."
+    }
+};
+
+// Détecter la langue du navigateur et assurer que c'est une des clés de messages
+const browserLanguage = (navigator.language.split('-')[0] as keyof typeof messages);
+
+// Sélectionner les messages en fonction de la langue détectée
+const selectedMessages = messages[browserLanguage] || messages.en;
 
 const formSchema = insertCategorySchema.pick({
     name: true,
@@ -60,12 +83,12 @@ export const CategoryForm = ({
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>
-                                Name
+                                {selectedMessages.nameLabel}
                             </FormLabel>
                             <FormControl>
                                 <Input
                                     disabled={disabled}
-                                    placeholder="e.g. Food, Transport, Salary, etc."
+                                    placeholder={selectedMessages.namePlaceholder}
                                     {...field}
                                 />
                             </FormControl>
@@ -73,7 +96,7 @@ export const CategoryForm = ({
                     )}
                 />
                 <Button className="w-full" disabled={disabled}>
-                    {id ? "Save changes" : "Create category"}
+                    {id ? selectedMessages.update : selectedMessages.create}
                 </Button>
                 {!!id && (
                     <Button
@@ -84,7 +107,7 @@ export const CategoryForm = ({
                         variant="outline"
                     >
                         <Trash className="size-4 mr-2" />
-                        Delete category
+                        {selectedMessages.delete}
                     </Button>
                 )}
             </form>

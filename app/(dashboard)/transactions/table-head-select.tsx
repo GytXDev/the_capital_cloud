@@ -20,6 +20,18 @@ const options = [
     "date",
 ];
 
+const translations = {
+    fr: {
+        skip: "Ignorer"
+    },
+    en: {
+        skip: "Skip"
+    },
+};
+
+const browserLanguage = (navigator.language.split('-')[0] as keyof typeof translations) || 'en';
+const selectedTranslations = translations[browserLanguage];
+
 export const TableHeadSelect = ({
     columnIndex,
     selectedColumns,
@@ -41,7 +53,7 @@ export const TableHeadSelect = ({
             </SelectTrigger>
             <SelectContent>
                 <SelectItem value="skip">
-                    Skip
+                    {selectedTranslations.skip}
                 </SelectItem>
                 {options.map((option, index) => {
                     const disabled = Object.values(selectedColumns)

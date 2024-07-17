@@ -5,9 +5,26 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { client } from "@/lib/hono";
 
+// Messages traduits
+const messages = {
+    en: {
+        success: "Transactions created",
+        error: "Failed to create transactions"
+    },
+    fr: {
+        success: "Transactions créées",
+        error: "Échec de la création des transactions"
+    }
+};
+
+// Détecter la langue du navigateur et assurer que c'est une des clés de messages
+const browserLanguage = (navigator.language.split('-')[0] as keyof typeof messages);
+
+// Sélectionner les messages en fonction de la langue détectée
+const selectedMessages = messages[browserLanguage] || messages.en;
+
 type ResponseType = InferResponseType<typeof client.api.transactions["bulk-create"]["$post"]>;
 type RequestType = InferRequestType<typeof client.api.transactions["bulk-create"]["$post"]>["json"];
-
 
 export const useBulkCreateTransactions = () => {
     const queryClient = useQueryClient();
@@ -22,16 +39,15 @@ export const useBulkCreateTransactions = () => {
             return await response.json();
         },
         onSuccess: () => {
-            toast.success("Transactions created")
+            toast.success(selectedMessages.success);
             queryClient.invalidateQueries({ queryKey: ["transactions"] });
             queryClient.invalidateQueries({ queryKey: ["summary"] });
-
             // TODO: Also invalidate summary
         },
         onError: () => {
-            toast.error("Failded to create transactions");
+            toast.error(selectedMessages.error);
         }
-    })
+    });
 
     return mutation;
-}
+};

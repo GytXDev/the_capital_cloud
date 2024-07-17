@@ -1,5 +1,5 @@
 // components/data-card.tsx
-import { IconType } from "react-icons"
+import { IconType } from "react-icons";
 import { VariantProps, cva } from "class-variance-authority";
 import { Skeleton } from "./ui/skeleton";
 import { cn, formatCurrency, formatPercentage } from "@/lib/utils";
@@ -10,7 +10,23 @@ import {
     CardDescription,
     CardTitle,
 } from "./ui/card";
-import { CountUp } from "./count-up"
+import { CountUp } from "./count-up";
+
+// Tableaux de traductions
+const translations = {
+    fr: {
+        comparedToPreviousPeriod: "par rapport à la période précédente"
+    },
+    en: {
+        comparedToPreviousPeriod: "compared to the previous period"
+    },
+};
+
+// Détecter la langue du navigateur et s'assurer que c'est une des clés de messages
+const browserLanguage = (navigator.language.split('-')[0] as keyof typeof translations) || 'en';
+
+// Sélectionner les messages en fonction de la langue détectée
+const selectedTranslations = translations[browserLanguage];
 
 const boxVariant = cva(
     "rounded-md p-3",
@@ -21,11 +37,11 @@ const boxVariant = cva(
                 success: "bg-emerald-500/20",
                 danger: "bg-rose-500/20",
                 warning: "bg-yellow-500/20",
-            }
+            },
         },
         defaultVariants: {
             variant: "default",
-        }
+        },
     }
 );
 
@@ -38,11 +54,11 @@ const iconVariant = cva(
                 success: "fill-emerald-500",
                 danger: "fill-rose-500",
                 warning: "fill-yellow-500",
-            }
+            },
         },
         defaultVariants: {
             variant: "default",
-        }
+        },
     }
 );
 
@@ -55,7 +71,7 @@ interface DataCardProps extends BoxVariants, IconVariant {
     value?: number;
     dateRange: string;
     percentageChange?: number;
-};
+}
 
 export const DataCard = ({
     icon: Icon,
@@ -76,11 +92,11 @@ export const DataCard = ({
                         {dateRange}
                     </CardDescription>
                 </div>
-                <div className={cn(boxVariant({ variant }),)}>
+                <div className={cn(boxVariant({ variant }))}>
                     <Icon className={cn(iconVariant({ variant }))} />
                 </div>
             </CardHeader>
-            <CardContent >
+            <CardContent>
                 <h1 className="font-bold text-2xl mb-2 line-clamp-1 break-all">
                     <CountUp
                         preserveValue
@@ -96,17 +112,16 @@ export const DataCard = ({
                     percentageChange > 0 && "text-emerald-500",
                     percentageChange < 0 && "text-rose-500"
                 )}>
-                    {formatPercentage(percentageChange, { addPrefix: true })} from last period
+                    {formatPercentage(percentageChange, { addPrefix: true })} {selectedTranslations.comparedToPreviousPeriod}
                 </p>
-
             </CardContent>
         </Card>
-    )
-}
+    );
+};
 
 export const DataCardLoading = () => {
     return (
-        <Card className="borer-none drop-shadow-sm  h-[192px]">
+        <Card className="border-none drop-shadow-sm h-[192px]">
             <CardHeader className="flex flex-row items-center justify-between gap-x-4">
                 <div className="space-y-2">
                     <Skeleton className="h-6 w-24" />
