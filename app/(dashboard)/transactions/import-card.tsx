@@ -8,6 +8,7 @@ import { ImportTable } from "./import-table";
 
 const dateFormat1 = "dd/MM/yyyy";
 const dateFormat2 = "yyyy-MM-dd";
+const dateFormat3 = "yyyy-MM-dd HH:mm:ss";
 const outputFormat = "yyyy-MM-dd";
 
 const requiredOptions = ["amount", "date", "payee"];
@@ -41,11 +42,13 @@ const browserLanguage = typeof navigator !== "undefined"
 
 const selectedTranslations = translations[browserLanguage];
 
-
 const parseDate = (dateString: string) => {
     let parsedDate = parse(dateString, dateFormat1, new Date());
     if (!isValid(parsedDate)) {
         parsedDate = parse(dateString, dateFormat2, new Date());
+    }
+    if (!isValid(parsedDate)) {
+        parsedDate = parse(dateString, dateFormat3, new Date()); // Ajout de la vérification pour le nouveau format
     }
     return isValid(parsedDate) ? format(parsedDate, outputFormat) : null;
 }

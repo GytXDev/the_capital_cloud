@@ -13,7 +13,6 @@ import {
 
 import { Button } from "@/components/ui/button";
 
-// Définition des routes avec les labels traduits
 const routes = [
     {
         href: "/",
@@ -95,7 +94,7 @@ export const Navigation = () => {
                                 key={route.href}
                                 variant={route.href === pathname ? "secondary" : "ghost"}
                                 onClick={() => onClick(route.href)}
-                                className="w-full justify-start"
+                                className="w-full justify-start my-1" // Espacement vertical avec 'my-1'
                             >
                                 {getLabel(route.label)}
                             </Button>
@@ -107,7 +106,7 @@ export const Navigation = () => {
     }
 
     return (
-        <nav className="hidden lg:flex items-center gap-x- overflow-x-auto">
+        <nav className="hidden lg:flex items-center gap-x-4 overflow-x-auto"> {/* Espacement horizontal avec 'gap-x-4' */}
             {routes.map((route) => (
                 <NavButton
                     key={route.href}
@@ -119,4 +118,5 @@ export const Navigation = () => {
         </nav>
     );
 };
+
 
