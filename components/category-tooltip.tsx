@@ -1,12 +1,9 @@
 // components/category-tooltip.tsx
-import { format } from "date-fns";
-
 import { formatCurrency } from "@/lib/utils";
 import { Separator } from "./ui/separator";
 import { useGetCurrency } from "@/features/currencies/api/use-get-currency";
 import { Currency } from "@/lib/currency-rates";
 
-// Tableaux de traductions
 const translations = {
     fr: {
         expenses: "Dépenses",
@@ -22,28 +19,21 @@ const browserLanguage = typeof navigator !== "undefined"
 
 const selectedTranslations = translations[browserLanguage];
 
-
 export const CategoryTooltip = ({ active, payload }: any) => {
     if (!active) return null;
 
     const { data: currencyData, isLoading, isError } = useGetCurrency();
 
-    if (!active || !payload || !payload.length || isLoading) return null;
+    if (isLoading) return <div>Loading...</div>;
+    if (isError || !currencyData || currencyData.length === 0) return <div>Error fetching currency</div>;
 
-    if (isError || !currencyData || currencyData.length === 0) {
-        return <div>Error fetching currency</div>;
-    }
-
-
-    // Récupérez la devise à partir des données de la réponse API
     const userCurrency: Currency = currencyData?.[0]?.currency as Currency || "USD";
-
 
     const name = payload[0].payload.name;
     const value = payload[0].value;
 
     return (
-        <div className="rounded-sm bg bg-white shadow-sm border overflow-hidden">
+        <div className="rounded-sm bg-white shadow-sm border overflow-hidden">
             <div className="text-sm p-2 px-3 bg-muted text-muted-foreground">
                 {name}
             </div>
@@ -62,5 +52,5 @@ export const CategoryTooltip = ({ active, payload }: any) => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};

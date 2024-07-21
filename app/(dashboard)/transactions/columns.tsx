@@ -1,21 +1,22 @@
 // app/(dashboard)/transactions/columns.tsx
-"use client"
-import { InferResponseType } from "hono"
-import { Button } from "@/components/ui/button"
-import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown } from "lucide-react"
-import { Checkbox } from "@/components/ui/checkbox"
-import { client } from "@/lib/hono"
-import { Actions } from "./actions"
-import { useGetCurrency } from "@/features/currencies/api/use-get-currency";
-import { formatCurrency } from "@/lib/utils"
+"use client";
+import { InferResponseType } from "hono";
+import { Button } from "@/components/ui/button";
+import { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { client } from "@/lib/hono";
+import { Actions } from "./actions";
+import { formatCurrency } from "@/lib/utils";
 import { Currency } from "@/lib/currency-rates";
-import { Badge } from "@/components/ui/badge"
-import { AccountColumn } from "./account-column"
-import { CategoryColumn } from "./category-column"
+import { Badge } from "@/components/ui/badge";
+import { AccountColumn } from "./account-column";
+import { CategoryColumn } from "./category-column";
+import { useGetCurrency } from "@/features/currencies/api/use-get-currency";
+import { useMemo } from "react";
 
+// Type pour les données de réponse
 export type ResponseType = InferResponseType<typeof client.api.transactions.$get, 200>["data"][0];
-
 
 const translations = {
   fr: {
@@ -42,6 +43,41 @@ const browserLanguage = typeof navigator !== "undefined"
 
 const selectedTranslations = translations[browserLanguage];
 
+// Composant fonctionnel pour afficher le montant formaté
+const AmountCell = ({ amount }: { amount: number }) => {
+  const { data: currencyData } = useGetCurrency();
+  const userCurrency: Currency = currencyData?.[0]?.currency as Currency || "USD";
+  return (
+    <Badge
+      variant={amount < 0 ? "destructive" : "primary"}
+      className="text-xs font-medium px-3.5 py-2.5"
+    >
+      {formatCurrency(amount, userCurrency)}
+    </Badge>
+  );
+};
+
+// Composant fonctionnel pour afficher la date formatée
+const DateCell = ({ date }: { date: string }) => {
+  const formattedDate = useMemo(() => {
+    const d = new Date(date);
+    const formatted = d.toLocaleDateString(navigator.language, {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+
+    // Capitalize the first letter of the month
+    return formatted.split(' ').map((word, index) => {
+      if (index === 1) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      }
+      return word;
+    }).join(' ');
+  }, [date]);
+
+  return <span>{formattedDate}</span>;
+};
 
 export const columns: ColumnDef<ResponseType>[] = [
   {
@@ -77,24 +113,7 @@ export const columns: ColumnDef<ResponseType>[] = [
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
-    cell: ({ row }) => {
-      const date = new Date(row.getValue("date") as string);
-      const formattedDate = date.toLocaleDateString(navigator.language, {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-
-      // Capitalize the first letter of the month
-      const capitalizedDate = formattedDate.split(' ').map((word, index) => {
-        if (index === 1) { // Assuming the month is always the second word
-          return word.charAt(0).toUpperCase() + word.slice(1);
-        }
-        return word;
-      }).join(' ');
-
-      return <span>{capitalizedDate}</span>;
-    },
+    cell: ({ row }) => <DateCell date={row.getValue("date") as string} />,
   },
   {
     accessorKey: "category",
@@ -107,15 +126,13 @@ export const columns: ColumnDef<ResponseType>[] = [
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
-    cell: ({ row }) => {
-      return (
-        <CategoryColumn
-          id={row.original.id}
-          category={row.original.category}
-          categoryId={row.original.categoryId}
-        />
-      );
-    },
+    cell: ({ row }) => (
+      <CategoryColumn
+        id={row.original.id}
+        category={row.original.category}
+        categoryId={row.original.categoryId}
+      />
+    ),
   },
   {
     accessorKey: "payee",
@@ -140,23 +157,10 @@ export const columns: ColumnDef<ResponseType>[] = [
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
-    cell: ({ row }) => {
-      const amountInUSD = parseFloat(row.getValue("amount"));
-
-      const currencyQuery = useGetCurrency();
-      const userCurrency: Currency = currencyQuery.data?.[0]?.currency as Currency || "USD";
-      return (
-        <Badge
-          variant={amountInUSD < 0 ? "destructive" : "primary"}
-          className="text-xs font-medium px-3.5 py-2.5"
-        >
-          {formatCurrency(amountInUSD, userCurrency)}
-        </Badge>
-      );
-    },
+    cell: ({ row }) => <AmountCell amount={parseFloat(row.getValue("amount"))} />,
   },
-{
-  accessorKey: "account",
+  {
+    accessorKey: "account",
     header: ({ column }) => (
       <Button
         variant="ghost"
@@ -166,17 +170,15 @@ export const columns: ColumnDef<ResponseType>[] = [
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
-      cell: ({ row }) => {
-        return (
-          <AccountColumn
-            account={row.original.account}
-            accountId={row.original.accountId}
-          />
-        )
-      },
+    cell: ({ row }) => (
+      <AccountColumn
+        account={row.original.account}
+        accountId={row.original.accountId}
+      />
+    ),
   },
-{
-  id: "actions",
+  {
+    id: "actions",
     cell: ({ row }) => <Actions id={row.original.id} />
-}
+  }
 ];
