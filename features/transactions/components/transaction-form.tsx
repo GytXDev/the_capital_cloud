@@ -3,14 +3,14 @@ import { z } from "zod";
 import { Trash } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { insertTransactionSchema } from "@/db/schema";
 import { AmountInput } from "@/components/amount-input";
 import { Select } from "@/components/select";
 import { DatePicker } from "@/components/date-picker";
-import { convertAmountToMiliunits } from "@/lib/utils";
+import { convertAmountToMiliunits, convertAmountToUSD } from "@/lib/utils";
+import { useGetCurrency } from "@/features/currencies/api/use-get-currency";
 import {
     Form,
     FormControl,
@@ -20,6 +20,7 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
+import { Currency } from "@/lib/currency-rates";
 
 const messages = {
     en: {
@@ -53,7 +54,6 @@ const messages = {
         deleteTransactionButton: "Supprimer la transaction",
     },
 };
-
 
 const formSchema = z.object({
     date: z.coerce.date(),
@@ -99,14 +99,24 @@ export const TransactionForm = ({
         defaultValues: defaultValues,
     });
 
+    const currencyQuery = useGetCurrency();
+    // Définir la devise utilisateur avec une valeur par défaut
+    const userCurrency: Currency = (currencyQuery.data?.[0]?.currency as Currency) || 'USD';
+
     const handleSubmit = (values: FormValues) => {
-        const amount = parseFloat(values.amount);
+        const amount = parseFloat(values.amount.replace(',', '.')); // Remplacer les virgules par des points pour les nombres
         if (isNaN(amount)) {
             console.error("Invalid amount");
             return;
         }
-        const amountInMiliunits = convertAmountToMiliunits(amount);
 
+        // Convertir le montant en dollars
+        const amountInUSD = convertAmountToUSD(amount, userCurrency);
+
+        // Convertir le montant en unités milli
+        const amountInMiliunits = convertAmountToMiliunits(amountInUSD);
+
+        // Soumettre les valeurs
         onSubmit({
             ...values,
             amount: amountInMiliunits,

@@ -80,7 +80,7 @@ export const useSelectAccount = (): [() => JSX.Element, () => Promise<string | u
                     <DialogDescription>{selectedMessages.dialogDescription}</DialogDescription>
                 </DialogHeader>
                 <Select
-                    placeholder="Select an account"
+                    placeholder={selectedMessages.dialogTitle}
                     options={accountOptions}
                     onCreate={onCreateAccount}
                     onChange={(value) => selectValue.current = value}

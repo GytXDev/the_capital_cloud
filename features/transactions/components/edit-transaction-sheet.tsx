@@ -6,6 +6,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "
 import { TransactionForm } from "./transaction-form";
 import { useOpenTransaction } from "../hooks/use-open-transactions";
 import { useGetTransaction } from "../api/use-get-transaction";
+import { useGetCurrency } from "@/features/currencies/api/use-get-currency";
 import { insertTransactionSchema } from "@/db/schema";
 import { useEditTransaction } from "../api/use-edit-transaction";
 import { useDeleteTransaction } from "../api/use-delete-transaction";
@@ -15,6 +16,7 @@ import { useGetAccounts } from "@/features/accounts/api/use-get-accounts";
 import { useCreateAccount } from "@/features/accounts/api/use-create-accounts";
 import { useConfirm } from "@/hooks/use-confirm";
 import { toast } from "sonner";
+import { Currency } from "@/lib/currency-rates";
 
 const formSchema = insertTransactionSchema.omit({
     id: true,
@@ -74,7 +76,10 @@ export const EditTransactionSheet = () => {
         value: account.id,
     }));
 
-    const transactionQuery = useGetTransaction(id);
+    const currencyQuery = useGetCurrency();
+    const userCurrency: Currency = currencyQuery.data?.[0]?.currency as Currency || "USD";
+
+    const transactionQuery = useGetTransaction(userCurrency, id);
     const editMutation = useEditTransaction(id);
     const deleteMutation = useDeleteTransaction(id);
 
@@ -108,7 +113,6 @@ export const EditTransactionSheet = () => {
             });
         }
     };
-
 
     const defaultValues = transactionQuery.data ? {
         accountId: transactionQuery.data.accountId,

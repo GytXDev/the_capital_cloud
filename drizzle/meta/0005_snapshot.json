@@ -1,6 +1,6 @@
 {
-  "id": "3a1a3325-da50-472a-bfca-966a1568b36a",
-  "prevId": "76be4869-42f3-40f4-8573-7839d0d11f4d",
+  "id": "fa5a64d5-fee3-470b-94c9-b6bedd9c3d99",
+  "prevId": "3a1a3325-da50-472a-bfca-966a1568b36a",
   "version": "5",
   "dialect": "pg",
   "tables": {
@@ -148,6 +148,34 @@
           "onUpdate": "no action"
         }
       },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "user_currencies": {
+      "name": "user_currencies",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "currency": {
+          "name": "currency",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     }

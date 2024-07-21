@@ -5,6 +5,7 @@ import accounts from "./accounts";
 import summary from "./summary";
 import categories from "./categories";
 import transactions from "./transactions";
+import currencies from "./currencies";
 
 export const runtime = "edge";
 
@@ -15,6 +16,7 @@ const routes = app
     .route("/accounts", accounts)
     .route("/categories", categories)
     .route("/transactions", transactions)
+    .route("/currencies", currencies)
 
 
 export const GET = handle(app);

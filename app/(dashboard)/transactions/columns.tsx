@@ -7,7 +7,9 @@ import { ArrowUpDown } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { client } from "@/lib/hono"
 import { Actions } from "./actions"
+import { useGetCurrency } from "@/features/currencies/api/use-get-currency";
 import { formatCurrency } from "@/lib/utils"
+import { Currency } from "@/lib/currency-rates";
 import { Badge } from "@/components/ui/badge"
 import { AccountColumn } from "./account-column"
 import { CategoryColumn } from "./category-column"
@@ -34,8 +36,8 @@ const translations = {
   },
 };
 
-const browserLanguage = typeof navigator !== "undefined" 
-  ? (navigator.language.split('-')[0] as keyof typeof translations) 
+const browserLanguage = typeof navigator !== "undefined"
+  ? (navigator.language.split('-')[0] as keyof typeof translations)
   : 'en';
 
 const selectedTranslations = translations[browserLanguage];
@@ -139,20 +141,22 @@ export const columns: ColumnDef<ResponseType>[] = [
       </Button>
     ),
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
+      const amountInUSD = parseFloat(row.getValue("amount"));
 
+      const currencyQuery = useGetCurrency();
+      const userCurrency: Currency = currencyQuery.data?.[0]?.currency as Currency || "USD";
       return (
         <Badge
-          variant={amount < 0 ? "destructive" : "primary"}
+          variant={amountInUSD < 0 ? "destructive" : "primary"}
           className="text-xs font-medium px-3.5 py-2.5"
         >
-          {formatCurrency(amount)}
+          {formatCurrency(amountInUSD, userCurrency)}
         </Badge>
-      )
+      );
     },
   },
-  {
-    accessorKey: "account",
+{
+  accessorKey: "account",
     header: ({ column }) => (
       <Button
         variant="ghost"
@@ -162,17 +166,17 @@ export const columns: ColumnDef<ResponseType>[] = [
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
-    cell: ({ row }) => {
-      return (
-        <AccountColumn
-          account={row.original.account}
-          accountId={row.original.accountId}
-        />
-      )
-    },
+      cell: ({ row }) => {
+        return (
+          <AccountColumn
+            account={row.original.account}
+            accountId={row.original.accountId}
+          />
+        )
+      },
   },
-  {
-    id: "actions",
+{
+  id: "actions",
     cell: ({ row }) => <Actions id={row.original.id} />
-  }
+}
 ];

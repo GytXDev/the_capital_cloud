@@ -3,7 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { client } from "@/lib/hono";
-import { convertAmountFromMiliunits } from "@/lib/utils";
+import { convertAmountFromMiliunits, convertAmountFromUSD } from "@/lib/utils";
+import { Currency } from "@/lib/currency-rates";
 
 // Définir les messages traduits
 const messages = {
@@ -22,7 +23,7 @@ const browserLanguage = typeof navigator !== "undefined"
 // Sélectionner les messages en fonction de la langue détectée
 const selectedMessages = messages[browserLanguage] || messages.en;
 
-export const useGetTransaction = (id?: string) => {
+export const useGetTransaction = (userCurrency: Currency, id?: string) => {
     const query = useQuery({
         enabled: !!id,
         queryKey: ["transaction", { id }],
@@ -38,7 +39,10 @@ export const useGetTransaction = (id?: string) => {
             const { data } = await response.json();
             return {
                 ...data,
-                amount: convertAmountFromMiliunits(data.amount),
+                amount: convertAmountFromUSD(
+                    convertAmountFromMiliunits(data.amount),
+                    userCurrency
+                )
             };
         },
     });

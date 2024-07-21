@@ -2,7 +2,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { eachDayOfInterval, format, isSameDay, subDays } from "date-fns";
-
+import { currencyRates, Currency } from "@/lib/currency-rates";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 };
@@ -15,13 +15,61 @@ export function convertAmountToMiliunits(amount: number) {
   return Math.round(amount * 1000)
 };
 
-export function formatCurrency(value: number) {
+// convertir le montant depuis USD
+export function convertAmountFromUSD(amount: number, currency: Currency): number {
+  // Récupère le taux de change de l'USD vers la devise spécifiée
+  const rate = currencyRates.USD[currency];
+  if (!rate) {
+    console.error(`No conversion rate found for USD to ${currency}`);
+    return amount; // Retourner le montant inchangé si le taux n'est pas trouvé
+  }
+  return amount * rate;
+}
+
+// convertir le montant en USD
+export function convertAmountToUSD(amount: number, currency: Currency): number {
+  // Récupère le taux de change de la devise spécifiée en dollars
+  const rate = currencyRates[currency]?.USD;
+  if (!rate) {
+    console.error(`No conversion rate found for ${currency} to USD`);
+    return amount; // Retourner le montant inchangé si le taux n'est pas trouvé
+  }
+  return amount * rate;
+}
+
+export function formatCurrency(value: number, currency: Currency = "USD"): string {
+  const baseCurrency: Currency = "USD"; // La devise de base pour les taux fixes
+
+  // Si la devise demandée est la devise de base, formate directement
+  if (currency === baseCurrency) {
+    return Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: baseCurrency,
+      minimumFractionDigits: 2,
+    }).format(value);
+  }
+
+  // Obtenir le taux de change pour convertir depuis la devise de base
+  const rates = currencyRates[baseCurrency];
+  const rate = rates[currency];
+  if (!rate) {
+    console.error(`Conversion rate not found for ${baseCurrency} to ${currency}`);
+    return Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: baseCurrency,
+      minimumFractionDigits: 2,
+    }).format(value);
+  }
+
+  // Convertir le montant en fonction du taux de change
+  const convertedValue = value * rate;
   return Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "XAF",
+    currency: currency,
     minimumFractionDigits: 2,
-  }).format(value);
-};
+  }).format(convertedValue);
+}
+
 
 export function calculatePercentageChange(current: number, previous: number) {
   if (previous === 0) {

@@ -3,6 +3,8 @@ import { format } from "date-fns";
 
 import { formatCurrency } from "@/lib/utils";
 import { Separator } from "./ui/separator";
+import { useGetCurrency } from "@/features/currencies/api/use-get-currency";
+import { Currency } from "@/lib/currency-rates";
 
 // Tableaux de traductions
 const translations = {
@@ -14,15 +16,28 @@ const translations = {
     },
 };
 
-const browserLanguage = typeof navigator !== "undefined" 
-  ? (navigator.language.split('-')[0] as keyof typeof translations) 
-  : 'en';
+const browserLanguage = typeof navigator !== "undefined"
+    ? (navigator.language.split('-')[0] as keyof typeof translations)
+    : 'en';
 
 const selectedTranslations = translations[browserLanguage];
 
 
 export const CategoryTooltip = ({ active, payload }: any) => {
     if (!active) return null;
+
+    const { data: currencyData, isLoading, isError } = useGetCurrency();
+
+    if (!active || !payload || !payload.length || isLoading) return null;
+
+    if (isError || !currencyData || currencyData.length === 0) {
+        return <div>Error fetching currency</div>;
+    }
+
+
+    // Récupérez la devise à partir des données de la réponse API
+    const userCurrency: Currency = currencyData?.[0]?.currency as Currency || "USD";
+
 
     const name = payload[0].payload.name;
     const value = payload[0].value;
@@ -42,7 +57,7 @@ export const CategoryTooltip = ({ active, payload }: any) => {
                         </p>
                     </div>
                     <p className="text-sm text-right font-medium">
-                        {formatCurrency(value * -1)}
+                        {formatCurrency(value * -1, userCurrency)}
                     </p>
                 </div>
             </div>

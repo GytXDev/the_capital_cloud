@@ -1,10 +1,11 @@
 // db/schema.ts
 import { z } from "zod";
 import { createInsertSchema } from "drizzle-zod";
-import { integer, pgTable, text, timestamp, decimal, date, } from "drizzle-orm/pg-core";
-import { createId } from "@paralleldrive/cuid2"
+import { integer, pgTable, text, timestamp, decimal, date } from "drizzle-orm/pg-core";
+import { createId } from "@paralleldrive/cuid2";
 import { relations } from "drizzle-orm";
 
+// Tables existantes
 export const accounts = pgTable(
     "accounts", {
     id: text("id").primaryKey().$defaultFn(() => createId()),
@@ -62,3 +63,13 @@ export const transactionsRelations = relations(transactions, ({ one }) => ({
 export const insertTransactionSchema = createInsertSchema(transactions, {
     date: z.coerce.date(),
 });
+
+// Nouvelle table pour les devises des utilisateurs
+export const userCurrencies = pgTable(
+    "user_currencies", {
+    id: text("id").primaryKey().$defaultFn(() => createId()),
+    userId: text("user_id").notNull(),
+    currency: text("currency").notNull(),
+});
+
+export const insertUserCurrencySchema = createInsertSchema(userCurrencies);

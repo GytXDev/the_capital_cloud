@@ -11,6 +11,8 @@ import {
     CardTitle,
 } from "./ui/card";
 import { CountUp } from "./count-up";
+import { Currency } from "@/lib/currency-rates";
+import { useGetCurrency } from "@/features/currencies/api/use-get-currency";
 
 // Tableaux de traductions
 const translations = {
@@ -27,7 +29,6 @@ const browserLanguage = typeof navigator !== "undefined"
     : 'en';
 
 const selectedTranslations = translations[browserLanguage];
-
 
 const boxVariant = cva(
     "rounded-md p-3",
@@ -82,6 +83,10 @@ export const DataCard = ({
     dateRange,
     percentageChange = 0,
 }: DataCardProps) => {
+    const { data: currencyData, isLoading, isError } = useGetCurrency();
+    // Récupérez la devise à partir des données de la réponse API
+    const userCurrency: Currency = currencyData?.[0]?.currency as Currency || "USD";
+
     return (
         <Card className="border-none drop-shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between gap-x-4">
@@ -105,7 +110,7 @@ export const DataCard = ({
                         end={value}
                         decimals={2}
                         decimalPlaces={2}
-                        formattingFn={formatCurrency}
+                        formattingFn={(val: number) => formatCurrency(val, userCurrency)}
                     />
                 </h1>
                 <p className={cn(
