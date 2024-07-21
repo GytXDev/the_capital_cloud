@@ -19,16 +19,17 @@ const browserLanguage = typeof navigator !== "undefined"
 
 const selectedTranslations = translations[browserLanguage];
 
-export const CategoryTooltip = ({ active, payload }: any) => {
-    if (!active) return null;
+const Loading = () => <div>Loading...</div>;
+const Error = () => <div>Error fetching currency</div>;
 
+export const CategoryTooltip = ({ active, payload }: any) => {
     const { data: currencyData, isLoading, isError } = useGetCurrency();
 
-    if (isLoading) return <div>Loading...</div>;
-    if (isError || !currencyData || currencyData.length === 0) return <div>Error fetching currency</div>;
+    if (!active) return null;
+    if (isLoading) return <Loading />;
+    if (isError || !currencyData || currencyData.length === 0) return <Error />;
 
     const userCurrency: Currency = currencyData?.[0]?.currency as Currency || "USD";
-
     const name = payload[0].payload.name;
     const value = payload[0].value;
 

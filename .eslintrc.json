@@ -1,24 +1,4 @@
 // .eslintrc.json
 {
-  "extends": [
-    "next/core-web-vitals",
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:react-hooks/recommended"
-  ],
-  "plugins": ["react", "react-hooks"],
-  "rules": {
-    "react/react-in-jsx-scope": "off", // Disable if using React 18 with new JSX Transform
-    "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn",
-    "no-console": "warn", // You can adjust this based on your needs
-    "no-unused-vars": "warn", // Adjust to "error" if you want to enforce this rule strictly
-    "jsx-a11y/anchor-is-valid": "off", // If using Next.js Link component
-    "react/prop-types": "off" // Turn off prop-types validation if using TypeScript
-  },
-  "settings": {
-    "react": {
-      "version": "detect" 
-    }
-  }
+  "extends": "next/core-web-vitals"
 }
