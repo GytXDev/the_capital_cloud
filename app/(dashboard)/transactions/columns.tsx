@@ -47,12 +47,14 @@ const selectedTranslations = translations[browserLanguage];
 const AmountCell = ({ amount }: { amount: number }) => {
   const { data: currencyData } = useGetCurrency();
   const userCurrency: Currency = currencyData?.[0]?.currency as Currency || "USD";
+  // Détermine le nombre de décimales en fonction de la devise
+  const minimumFractionDigits = userCurrency === "XAF" ? 0 : 2;
   return (
     <Badge
       variant={amount < 0 ? "destructive" : "primary"}
       className="text-xs font-medium px-3.5 py-2.5"
     >
-      {formatCurrency(amount, userCurrency)}
+      {formatCurrency(amount, userCurrency, minimumFractionDigits)}
     </Badge>
   );
 };

@@ -35,6 +35,8 @@ export const RadialVariant = ({ data }: Props) => {
     // Récupérez la devise à partir des données de la réponse API
     const userCurrency: Currency = currencyData?.[0]?.currency as Currency || "USD";
 
+    const minimumFractionDigits = userCurrency === "XAF" ? 0 : 2;
+
     return (
         <ResponsiveContainer width="100%" height={350}>
             <RadialBarChart
@@ -78,7 +80,7 @@ export const RadialVariant = ({ data }: Props) => {
                                             {entry.value}
                                         </span>
                                         <span className="text-sm">
-                                            {formatCurrency(entry.payload.value, userCurrency)}
+                                            {formatCurrency(entry.payload.value, userCurrency, minimumFractionDigits)}
                                         </span>
                                     </div>
                                 </li>

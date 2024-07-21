@@ -87,6 +87,8 @@ export const DataCard = ({
     // Récupérez la devise à partir des données de la réponse API
     const userCurrency: Currency = currencyData?.[0]?.currency as Currency || "USD";
 
+    const minimumFractionDigits = userCurrency === "XAF" ? 0 : 2;
+
     return (
         <Card className="border-none drop-shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between gap-x-4">
@@ -110,7 +112,7 @@ export const DataCard = ({
                         end={value}
                         decimals={2}
                         decimalPlaces={2}
-                        formattingFn={(val: number) => formatCurrency(val, userCurrency)}
+                        formattingFn={(val: number) => formatCurrency(val, userCurrency, minimumFractionDigits)}
                     />
                 </h1>
                 <p className={cn(

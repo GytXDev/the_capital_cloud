@@ -30,6 +30,10 @@ export const CategoryTooltip = ({ active, payload }: any) => {
     if (isError || !currencyData || currencyData.length === 0) return <Error />;
 
     const userCurrency: Currency = currencyData?.[0]?.currency as Currency || "USD";
+
+    // Détermine le nombre de décimales en fonction de la devise
+    const minimumFractionDigits = userCurrency === "XAF" ? 0 : 2;
+
     const name = payload[0].payload.name;
     const value = payload[0].value;
 
@@ -48,7 +52,7 @@ export const CategoryTooltip = ({ active, payload }: any) => {
                         </p>
                     </div>
                     <p className="text-sm text-right font-medium">
-                        {formatCurrency(value * -1, userCurrency)}
+                        {formatCurrency(value * -1, userCurrency,  minimumFractionDigits)}
                     </p>
                 </div>
             </div>

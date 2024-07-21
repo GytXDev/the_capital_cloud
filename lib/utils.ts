@@ -37,16 +37,30 @@ export function convertAmountToUSD(amount: number, currency: Currency): number {
   return amount * rate;
 }
 
-export function formatCurrency(value: number, currency: Currency = "USD"): string {
+export function formatCurrency(value: number, currency: Currency = "USD", minimumFractionDigits: number = 2): string {
   const baseCurrency: Currency = "USD"; // La devise de base pour les taux fixes
+
+  // Format de base
+  let formatter = Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: currency,
+    minimumFractionDigits: minimumFractionDigits,
+  });
+
+  // Pour FCFA (XAF), nous devons ajouter des espaces entre les milliers
+  if (currency === "XAF") {
+    formatter = new Intl.NumberFormat("fr-FR", {
+      style: "currency",
+      currency: currency,
+      minimumFractionDigits: minimumFractionDigits,
+      currencyDisplay: "symbol",
+      useGrouping: true
+    });
+  }
 
   // Si la devise demandée est la devise de base, formate directement
   if (currency === baseCurrency) {
-    return Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: baseCurrency,
-      minimumFractionDigits: 2,
-    }).format(value);
+    return formatter.format(value);
   }
 
   // Obtenir le taux de change pour convertir depuis la devise de base
@@ -54,21 +68,14 @@ export function formatCurrency(value: number, currency: Currency = "USD"): strin
   const rate = rates[currency];
   if (!rate) {
     console.error(`Conversion rate not found for ${baseCurrency} to ${currency}`);
-    return Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: baseCurrency,
-      minimumFractionDigits: 2,
-    }).format(value);
+    return formatter.format(value);
   }
 
   // Convertir le montant en fonction du taux de change
   const convertedValue = value * rate;
-  return Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: currency,
-    minimumFractionDigits: 2,
-  }).format(convertedValue);
+  return formatter.format(convertedValue);
 }
+
 
 
 export function calculatePercentageChange(current: number, previous: number) {
