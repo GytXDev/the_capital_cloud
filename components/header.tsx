@@ -5,6 +5,7 @@ import { Loader2 } from 'lucide-react';
 import HeaderLogo from './header-logo';
 import { Navigation } from './navigation';
 import { UserButton, ClerkLoaded, ClerkLoading } from '@clerk/nextjs';
+import NotificationButton from './advices/advices_button';
 
 // Import dynamique des composants WelcomeMsg et Filters
 const WelcomeMsg = dynamic(() => import('./welcome-msg').then(mod => mod.WelcomeMsg), { ssr: false });
@@ -27,7 +28,10 @@ export const Header = () => {
                     </div>
                     {isMounted && (
                         <ClerkLoaded>
-                            <UserButton afterSignOutUrl="/" />
+                            <div className="flex items-center gap-x-2"> {/* Ajustement de l'espacement */}
+                                <UserButton afterSignOutUrl="/" />
+                                <NotificationButton />
+                            </div>
                         </ClerkLoaded>
                     )}
                     {isMounted && (

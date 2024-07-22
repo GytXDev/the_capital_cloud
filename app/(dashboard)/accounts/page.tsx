@@ -16,11 +16,31 @@ import {
 import { columns } from "@/app/(dashboard)/accounts/columns"
 import { Skeleton } from "@/components/ui/skeleton";
 
+// Tableaux de traductions
+const translations = {
+    fr: {
+        accountPage: "Page de compte",
+        addNew: "Ajouter un nouveau",
+    },
+    en: {
+        accountPage: "Account Page",
+        addNew: "Add New",
+    },
+};
+
+const browserLanguage = typeof navigator !== "undefined"
+    ? (navigator.language.split('-')[0] as keyof typeof translations)
+    : 'en';
+
+const selectedTranslations = translations[browserLanguage];
+
+
+
 const AccountsPage = () => {
     const newAccount = useNewAccount();
     const deleteAccounts = useBulkDeleteAccounts();
     const accountsQuery = useGetAccounts();
-    
+
     const accounts = accountsQuery.data || [];
 
     const isDisabled = accountsQuery.isLoading || deleteAccounts.isPending;
@@ -47,11 +67,11 @@ const AccountsPage = () => {
             <Card className="border-none drop-shadow-sm">
                 <CardHeader className="gap-y-2 lg:flex-row lg:items-center lg:justify-between">
                     <CardTitle className="text-xl line-clamp-1">
-                        Account page
+                        {selectedTranslations.accountPage}
                     </CardTitle>
                     <Button onClick={newAccount.onOpen} size="sm">
                         <Plus className="size-4 mr-2" />
-                        Add new
+                        {selectedTranslations.addNew}
                     </Button>
                 </CardHeader>
                 <CardContent>

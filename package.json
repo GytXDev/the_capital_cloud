@@ -21,6 +21,7 @@
     "@hookform/resolvers": "^3.6.0",
     "@lemonsqueezy/lemonsqueezy.js": "^3.2.0",
     "@neondatabase/serverless": "^0.9.4",
+    "@nextui-org/react": "^2.4.6",
     "@paralleldrive/cuid2": "^2.2.2",
     "@radix-ui/react-checkbox": "^1.1.1",
     "@radix-ui/react-dialog": "^1.1.1",
@@ -35,6 +36,7 @@
     "@tanstack/react-table": "^8.19.1",
     "axios": "^1.7.2",
     "calendar": "^0.1.1",
+    "canvas-confetti": "^1.9.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
@@ -70,6 +72,7 @@
     "zustand": "^4.5.4"
   },
   "devDependencies": {
+    "@types/canvas-confetti": "^1.6.4",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
