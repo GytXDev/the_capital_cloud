@@ -25,7 +25,7 @@ const translations = {
         skip: "Ignorer"
     },
     en: {
-        skip: "Skip"
+        skip: ""
     },
 };
 

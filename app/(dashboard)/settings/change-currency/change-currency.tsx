@@ -21,6 +21,27 @@ const ChangeCurrency = () => {
   const [isChangingCurrency, setIsChangingCurrency] = React.useState<boolean>(false);
   const [buttonsVisible, setButtonsVisible] = React.useState<boolean>(true);
 
+
+  // Tableaux de traductions
+  const translations = {
+    fr: {
+      changeCurrency: "",
+      applyChange: "",
+      cancel: "",
+    },
+    en: {
+      changeCurrency: "Change currency",
+      applyChange: "Apply Change",
+      cancel: "Cancel",
+    },
+  };
+
+  const browserLanguage = typeof navigator !== "undefined"
+    ? (navigator.language.split('-')[0] as keyof typeof translations)
+    : 'en';
+
+  const selectedTranslations = translations[browserLanguage];
+
   const queryClient = useQueryClient();
 
   const currencyQuery = useGetCurrency();

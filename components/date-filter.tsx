@@ -19,6 +19,26 @@ export const DateFilter = () => {
   const from = params.get('from') || '';
   const to = params.get('to') || '';
 
+
+  // Tableaux de traductions
+  const translations = {
+    fr: {
+      reset: "",
+      apply: "",
+    },
+    en: {
+      reset: "Reset",
+      apply: "Apply",
+    },
+  };
+
+  const browserLanguage = typeof navigator !== "undefined"
+    ? (navigator.language.split('-')[0] as keyof typeof translations)
+    : 'en';
+
+  const selectedTranslations = translations[browserLanguage];
+
+
   const defaultTo = new Date();
   const defautltFrom = subDays(defaultTo, 30);
 
